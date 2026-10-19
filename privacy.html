@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy policy for Settle</title>
+<title>Privacy policy for Erana</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%201024%201024%22%20aria-hidden%3D%22true%22%3E%3Crect%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22230%22%20style%3D%22fill%3A%230B6E4F%22%2F%3E%3Cpath%20d%3D%22M630%20320H400V704H630M400%20512H590%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%2280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E">
+<meta name="robots" content="noindex, nofollow">
 <style>
-:root { color-scheme: light dark; --bg: #f7f4ee; --text: #101828; --muted: #5b6472; --line: #ddd6c8; --accent: #0b6e4f; }
-@media (prefers-color-scheme: dark) { :root { --bg: #101418; --text: #f1eee7; --muted: #a3abb8; --line: #2c333c; --accent: #3db88a; } }
+:root { color-scheme: light dark; --bg: #F7F4EE; --card: #FFFFFF; --text: #101828; --muted: #667085; --line: #D9D3C5; --accent: #0B6E4F; --gold: #8A6414; --hero-bg: #0B6E4F; --hero-text: #FFFFFF; --hero-edge: transparent; --logo-bg: rgba(255,255,255,0.16); }
+@media (prefers-color-scheme: dark) { :root { --bg: #101513; --card: #1A221F; --text: #F3F5F4; --muted: #98A29D; --line: #26302C; --accent: #3DB88A; --gold: #E8C872; --hero-bg: #1A221F; --hero-text: #F3F5F4; --hero-edge: #E8C872; --logo-bg: #3DB88A; } }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 main { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
 h1 { font-family: Georgia, serif; font-size: 2rem; line-height: 1.2; }
@@ -16,38 +18,51 @@ nav { display: flex; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid va
 .table { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
 th, td { text-align: left; vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); }
+.home main { max-width: 640px; padding-top: 32px; }
+.hero { background: var(--hero-bg); color: var(--hero-text); border: 1px solid var(--hero-edge); border-radius: 28px; padding: 28px 24px 30px; }
+.hero .logo { display: block; width: 56px; height: 56px; margin-bottom: 20px; }
+.hero .eyebrow { margin: 0; color: #E8C872; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.hero h1 { margin: 6px 0 8px; font-size: 3.25rem; line-height: 1.05; }
+.hero p { margin: 0 0 12px; font-size: 1.05rem; }
+.hero p:last-child { margin-bottom: 0; opacity: 0.85; font-size: 0.95rem; }
+.label { margin: 32px 0 8px 4px; color: var(--gold); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; box-shadow: 0 4px 14px rgba(16, 24, 40, 0.06); }
+.card p { margin: 0 0 12px; }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+.card ul { margin: 0 0 12px; padding-left: 20px; }
+.card li { margin-bottom: 6px; }
 </style>
 </head>
-<body>
+<body class="legal">
 <main>
-<nav><a href="index.html">Settle</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a></nav>
-<h1>Privacy policy for Settle</h1>
-<p><strong>Status: draft.</strong> This policy describes how Settle works today. It must be reviewed by a lawyer before the app is published. Items marked <strong>[TODO]</strong> are not finished yet.</p>
-<p>Last updated: 18 October 2026</p>
+<nav><a href="index.html">Erana</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of use</a></nav>
+<h1>Privacy policy for Erana</h1>
+<p><strong>Status: draft.</strong> This policy describes how Erana works today. It must be reviewed by a lawyer before the app is published. Items marked <strong>[TODO]</strong> are not finished yet.</p>
+<p>Last updated: 19 October 2026</p>
 <h2>Who we are</h2>
-<p>Settle is a bill-splitting app. The data controller is [name to be added before launch], contactable at [contact email to be added before launch]. Postal address: [postal address to be added before launch].</p>
+<p>Erana is a bill-splitting app. The data controller is [name to be added before launch], contactable at [contact email to be added before launch]. Postal address: [postal address to be added before launch].</p>
 <h2>What we collect and why</h2>
-<div class="table"><table><thead><tr><th>Data</th><th>Why</th><th>Where it is kept</th></tr></thead><tbody><tr><td>Email address, or the name and email from Google or Apple sign-in</td><td>To sign you in and identify your account</td><td>Supabase database, Stockholm (EU)</td></tr><tr><td>Display name and default currency</td><td>To show your name to your group members and to set amounts</td><td>Supabase database</td></tr><tr><td>Country (optional)</td><td>To complete phone numbers saved without a country code when finding friends in your contacts</td><td>Supabase database</td></tr><tr><td>Accent color (Emerald or Burgundy)</td><td>To show the color you chose in the app</td><td>Supabase database</td></tr><tr><td>Phone number</td><td>To let people who have your number in their contacts find you</td><td>Stored only as a keyed one-way hash (HMAC). The number itself is not kept, and the key is not stored with the hash</td></tr><tr><td>Groups, expenses, payments, payment requests, and balances</td><td>To split costs and show who owes whom</td><td>Supabase database</td></tr><tr><td>Friendships</td><td>To list your friends</td><td>Supabase database</td></tr><tr><td>Timestamps of phone and contact lookups, and invite attempts</td><td>To limit how often they can be tried (rate limiting)</td><td>Supabase database. Deleted after one day, by an hourly cleanup</td></tr><tr><td>Crash reports and error codes</td><td>To find and fix problems</td><td>Sentry. Reports contain no names, emails or phone numbers</td></tr></tbody></table></div>
+<div class="table"><table><thead><tr><th>Data</th><th>Why</th><th>Where it is kept</th></tr></thead><tbody><tr><td>Email address, or the name and email from Google or Apple sign-in</td><td>To sign you in and identify your account</td><td>Supabase database, Stockholm (EU)</td></tr><tr><td>Display name</td><td>To show your name to your group members</td><td>Supabase database. Other members of your groups can read it</td></tr><tr><td>Private settings: default currency, country (optional), language, and accent color (Emerald or Burgundy)</td><td>To set amounts, complete phone numbers saved without a country code when finding friends in your contacts, and show the color you chose</td><td>Supabase database, in a table only you can read</td></tr><tr><td>Your agreement to these terms and this policy: the version and the time</td><td>To show that you agreed, and to ask you again when the documents change</td><td>Supabase database, in the same private table</td></tr><tr><td>Phone number</td><td>To let people who have your number in their contacts find you</td><td>Stored only as a keyed one-way hash (HMAC). The number itself is not kept, and the key is not stored with the hash</td></tr><tr><td>Groups, expenses, payments, payment requests, and balances</td><td>To split costs and show who owes whom</td><td>Supabase database</td></tr><tr><td>Friendships</td><td>To list your friends</td><td>Supabase database</td></tr><tr><td>Notification settings, and a device token for each phone where you allowed notifications</td><td>To send you the notifications you chose</td><td>Supabase database. A token is deleted when you sign out on that phone, when Apple reports it as no longer valid, and when you delete your account</td></tr><tr><td>Queued notifications: a title and a short text, such as the name of a group and the name of the person who added an expense</td><td>To send the notification to your phone</td><td>Supabase database. Kept until sent, then deleted after 7 days</td></tr><tr><td>Invites you create: the code and its expiry</td><td>To let people join your group</td><td>Supabase database. Kept until you delete your account</td><td></td><td>Timestamps of phone and contact lookups, and invite attempts</td><td>To limit how often they can be tried (rate limiting)</td><td>Supabase database. Deleted after one day, by an hourly cleanup</td></tr><tr><td>Feedback you send from Settings: the message, what it is about, the app version, and the platform (iPhone or Android)</td><td>To find and fix problems and to decide what to improve</td><td>Supabase database. Feedback is anonymous: it is stored without your account or any other identifier, so it cannot be linked to you and is not removed when you delete your account. Please do not write personal details in it</td></tr><tr><td>Crash reports and error codes</td><td>To find and fix problems</td><td>Sentry. Reports contain no names, emails or phone numbers</td></tr></tbody></table></div>
 <h2>Contacts</h2>
-<p>With your permission, Settle reads the names and phone numbers in your phone's contacts on your device. Only the phone numbers are sent to Settle, to check which people have an account. Settle does not store your contacts. Names from your contacts stay on your device, in the app's memory, and are cleared when you close the app.</p>
+<p>With your permission, Erana reads the names and phone numbers in your phone's contacts on your device. Only the phone numbers are sent to Erana, to check which people have an account. Erana does not store your contacts. Names from your contacts stay on your device, in the app's memory, and are cleared when you close the app.</p>
 <p>You can refuse contacts access, or change it later in the iOS Settings app. Friends can still be added some other way once that is available.</p>
 <h2>Sign-in</h2>
-<p>You can sign in with a one-time code sent to your email, with Google, or with Apple. Google and Apple send us the information you agree to share with Settle. Apple may give us a private relay address instead of your real email.</p>
+<p>You can sign in with a one-time code sent to your email, with Google, or with Apple. Google and Apple send us the information you agree to share with Erana. Apple may give us a private relay address instead of your real email.</p>
 <h2>Who we share data with</h2>
 <p>We do not sell your data. We use these service providers, who process data on our behalf:</p>
-<ul><li><strong>Supabase</strong>: database, authentication, and hosting (Stockholm, EU).</li><li><strong>Sentry</strong>: crash reports, without personal data.</li><li><strong>Google and Apple</strong>: only when you choose to sign in with them.</li></ul>
+<ul><li><strong>Supabase</strong>: database, authentication, and hosting (Stockholm, EU).</li><li><strong>Sentry</strong>: crash reports, without personal data.</li><li><strong>Expo and Apple</strong>: if you allow notifications, the title and text of each notification, and your device token, are sent through Expo's push service and Apple's push notification service to reach your phone. Erana puts no amounts or expense descriptions in the text.</li><li><strong>Google and Apple</strong>: only when you choose to sign in with them.</li></ul>
 <p>Other group members can see your display name, your balances in groups you share, and the payments and expenses in those groups.</p>
 <h2>How long we keep data</h2>
 <p>Data stays while your account exists. You can delete your account from the Profile screen at any time. When you do:</p>
-<ul><li>Your sign-in, email address, phone number hash, friends, invites, and custom categories are deleted.</li><li>Your name is replaced with &quot;Deleted user&quot;. The expenses and payments you took part in stay in your groups, with your identity removed. The ledger is append-only, and other members' balances depend on it, so these records cannot be deleted without making their balances wrong.</li><li>Text you wrote stays visible to the other members of your groups: expense descriptions, and the earlier versions of an expense that its history keeps. Notes you wrote on payments and payment requests are cleared. Do not put personal details in expense descriptions.</li><li>If you were the only admin of a group, the member who joined first becomes admin.</li></ul>
+<ul><li>Your sign-in, email address, phone number hash, private settings, notification settings, device tokens, queued notifications, friends, invites, and custom categories are deleted.</li><li>Your name is replaced with &quot;Deleted user&quot;. The expenses and payments you took part in stay in your groups, with your identity removed. The ledger is append-only, and other members' balances depend on it, so these records cannot be deleted without making their balances wrong.</li><li>Text you wrote stays visible to the other members of your groups: expense descriptions, and the earlier versions of an expense that its history keeps. Notes you wrote on payments and payment requests are cleared. Do not put personal details in expense descriptions.</li><li>If you were the only admin of a group, the member who joined first becomes admin.</li></ul>
 <h2>Your rights</h2>
 <p>You can see, correct, export, and delete your data:</p>
-<ul><li><strong>See and correct:</strong> your name, currency, and other profile details are on the Profile screen.</li><li><strong>Export:</strong> the Profile screen can export a copy of your data as JSON, and your expenses and payments as CSV. Other people appear by display name only, where a record involves them.</li><li><strong>Delete:</strong> see &quot;How long we keep data&quot; above.</li></ul>
+<ul><li><strong>See and correct:</strong> your name, currency, country, accent color, and other profile details are on the Profile screen.</li><li><strong>Export:</strong> the Profile screen can export a copy of your data as JSON, including when you agreed to the terms, and your expenses and payments as CSV. Other people appear by display name only, where a record involves them.</li><li><strong>Delete:</strong> see &quot;How long we keep data&quot; above.</li></ul>
 <p>You can also contact us at [contact email to be added before launch].</p>
 <h2>Security</h2>
-<p>Data is stored in a database with row-level security, so each person can only read the rows they are allowed to see. Money amounts are stored as whole numbers. The sign-in session is kept in the iPhone Keychain. Requests that could be used to guess codes or numbers are rate limited.</p>
+<p>Data is stored in a database with row-level security, so each person can only read the rows they are allowed to see. Money amounts are stored as whole numbers. The sign-in session is kept in the iPhone Keychain, on that phone only: it is not included in backups or moved to a new phone. You can turn on an app lock in Settings, which asks for Face ID or your passcode when the app opens. The check is done by iOS on your phone: Erana never receives or stores your face or fingerprint data, and the lock setting stays on your phone. A group can have at most 50 members, and each person can look up phone numbers a limited number of times a day, so the lookup cannot be used to scan for numbers. Requests that could be used to guess codes or numbers are rate limited.</p>
 <h2>Children</h2>
-<p>Settle is not intended for anyone under 16. If we learn that someone under 16 has an account, we will delete it.</p>
+<p>Erana is not intended for anyone under 16. If we learn that someone under 16 has an account, we will delete it.</p>
 <h2>Changes to this policy</h2>
 <p>We will update this document when the data we collect or how we use it changes, and we will tell users in the app when that happens.</p>
 </main>
