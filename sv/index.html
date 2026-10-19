@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erana</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%201024%201024%22%20aria-hidden%3D%22true%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22erana-bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%230E3A32%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23071F1C%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22230%22%20fill%3D%22url(%23erana-bg)%22%2F%3E%3Cpath%20d%3D%22M%20280.62%20437.17%20C%20320.00%20429.29%20369.23%20425.35%20428.31%20421.42%20C%20394.83%20456.86%20390.89%20506.09%20392.86%20555.32%20C%20394.83%20643.94%20359.38%20722.71%20280.62%20768.00%20Z%22%20fill%3D%22%236B2A38%22%2F%3E%3Cpath%20d%3D%22M%20280.62%20437.17%20C%20280.62%20315.08%20339.69%20259.94%20453.91%20259.94%20L%20743.38%20256.00%20C%20684.31%20358.40%20591.75%20409.60%20481.48%20417.48%20L%20428.31%20421.42%20C%20369.23%20425.35%20320.00%20429.29%20280.62%20437.17%20Z%22%20fill%3D%22%23CFCAC3%22%2F%3E%3Cpath%20d%3D%22M%20384.98%20590.77%20C%20398.77%20527.75%20444.06%20486.40%20526.77%20482.46%20L%20644.92%20476.55%20C%20615.38%20535.63%20568.12%20598.65%20489.35%20606.52%20L%20402.71%20606.52%20C%20392.86%20606.52%20384.98%20598.65%20384.98%20590.77%20Z%22%20fill%3D%22%23CFCAC3%22%2F%3E%3Cpath%20d%3D%22M%20280.62%20768.00%20C%20320.00%20704.98%20359.38%20665.60%20428.31%20661.66%20L%20684.31%20659.69%20C%20654.77%20722.71%20615.38%20768.00%20540.55%20768.00%20Z%22%20fill%3D%22%23CFCAC3%22%2F%3E%3C%2Fsvg%3E">
+<meta name="description" content="Erana är en app för att dela kostnader i grupper av vänner, sambor och resesällskap. Först till iPhone, för Sverige och Estland.">
+<meta property="og:title" content="Erana">
+<meta property="og:description" content="Erana är en app för att dela kostnader i grupper av vänner, sambor och resesällskap. Först till iPhone, för Sverige och Estland.">
+<link rel="alternate" hreflang="en" href="https://erana.eu/">
+<link rel="alternate" hreflang="sv" href="https://erana.eu/sv/">
+<link rel="alternate" hreflang="et" href="https://erana.eu/et/">
+<link rel="alternate" hreflang="x-default" href="https://erana.eu/">
+<style>
+:root { color-scheme: light dark; --bg: #F5F2EE; --card: #FFFFFF; --text: #1F1F1F; --muted: #626B68; --line: #DADADA; --accent: #0E3A32; --label: #626B68; --eyebrow: #C9C4BC; --hero-bg: #0E3A32; --hero-text: #F5F2EE; --hero-edge: transparent; }
+@media (prefers-color-scheme: dark) { :root { --bg: #121514; --card: #1D2523; --text: #F5F2EE; --muted: #AAB8B2; --line: #2F3836; --accent: #74B5A2; --label: #AAB8B2; --eyebrow: #74B5A2; --hero-bg: #1D2523; --hero-text: #F5F2EE; --hero-edge: #2F3836; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 2rem; line-height: 1.2; font-weight: 600; }
+h2 { margin-top: 2rem; font-size: 1.25rem; }
+a { color: var(--accent); }
+nav { display: flex; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.table { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); }
+.home main { max-width: 640px; padding-top: 32px; }
+.hero { background: var(--hero-bg); color: var(--hero-text); border: 1px solid var(--hero-edge); border-radius: 24px; padding: 28px 24px 30px; }
+.hero .logo { display: block; width: 56px; height: 56px; margin-bottom: 20px; }
+.hero .eyebrow { margin: 0; color: var(--eyebrow); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.hero h1 { margin: 6px 0 8px; font-size: 3.25rem; line-height: 1.05; }
+.hero p { margin: 0 0 12px; font-size: 1.05rem; }
+.hero p:last-child { margin-bottom: 0; opacity: 0.85; font-size: 0.95rem; }
+.label { margin: 32px 0 8px 4px; color: var(--label); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; box-shadow: 0 4px 14px rgba(31, 31, 31, 0.06); }
+.card p { margin: 0 0 12px; }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+.card ul { margin: 0 0 12px; padding-left: 20px; }
+.card li { margin-bottom: 6px; }
+nav.langs { justify-content: flex-end; gap: 6px; padding: 0 0 12px; border: 0; font-size: 0.85rem; }
+nav.langs a { padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); text-decoration: none; }
+nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+</style>
+</head>
+<body class="home">
+<main>
+<nav class="langs" aria-label="Language"><a href="/" hreflang="en" lang="en">English</a><a href="/sv/" hreflang="sv" lang="sv" aria-current="page">Svenska</a><a href="/et/" hreflang="et" lang="et">Eesti</a></nav>
+<div class="hero"><svg class="logo" viewBox="0 0 1024 1024" aria-hidden="true"><defs><linearGradient id="erana-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E3A32"/><stop offset="1" stop-color="#071F1C"/></linearGradient></defs><rect width="1024" height="1024" rx="230" fill="url(#erana-bg)"/><path d="M 280.62 437.17 C 320.00 429.29 369.23 425.35 428.31 421.42 C 394.83 456.86 390.89 506.09 392.86 555.32 C 394.83 643.94 359.38 722.71 280.62 768.00 Z" fill="#6B2A38"/><path d="M 280.62 437.17 C 280.62 315.08 339.69 259.94 453.91 259.94 L 743.38 256.00 C 684.31 358.40 591.75 409.60 481.48 417.48 L 428.31 421.42 C 369.23 425.35 320.00 429.29 280.62 437.17 Z" fill="#CFCAC3"/><path d="M 384.98 590.77 C 398.77 527.75 444.06 486.40 526.77 482.46 L 644.92 476.55 C 615.38 535.63 568.12 598.65 489.35 606.52 L 402.71 606.52 C 392.86 606.52 384.98 598.65 384.98 590.77 Z" fill="#CFCAC3"/><path d="M 280.62 768.00 C 320.00 704.98 359.38 665.60 428.31 661.66 L 684.31 659.69 C 654.77 722.71 615.38 768.00 540.55 768.00 Z" fill="#CFCAC3"/></svg><p class="eyebrow">Kostnadsdelning för grupper</p><h1>Erana</h1><p>Dela räkningar med vänner utan krånglig huvudräkning.</p><p>Erana är en app för att dela kostnader i grupper av vänner, sambor och resesällskap. Den byggs i Sverige och kommer först till iPhone, för Sverige och Estland.</p></div>
+<p class="label">Idén</p>
+<div class="card"><p>Delade kostnader är lätta att tappa bort. Någon betalar maten, någon annan hyran, någon middagen, och en månad senare vet ingen säkert vem som är skyldig vem.</p>
+<p>Erana håller en tydlig redovisning för gruppen. Alla lägger till det de har betalat, och alla medlemmar ser samma saldo. När det är dags att göra upp föreslår Erana så få betalningar som möjligt för att jämna ut allt, så att ingen behöver räkna eller skicka en pinsam påminnelse.</p>
+<ul><li>Dela lika, med exakta belopp, i procent, post för post från ett kvitto, eller med justeringar som en extra drink för en person.</li><li>Ett saldo för hela gruppen, samma för alla.</li><li>Betalningar görs utanför appen, kontant, med banköverföring eller med Swish, och registreras i Erana.</li><li>Inga annonser, och du kan alltid exportera dina egna data.</li></ul></div>
+<p class="label">Det som gör Erana annorlunda</p>
+<div class="card"><p>De flesta appar gör halva jobbet. Vissa delar räkningar med vänner, andra håller koll på dina egna pengar. Erana är byggd så att de två halvorna finns sida vid sida, och så att den privata halvan förblir privat.</p>
+<ul><li><strong>Dina pengar och de delade pengarna på ett ställe.</strong> Dina egna inkomster, dina egna utgifter och dina budgetar finns bredvid kostnaderna du delar, så att du ser vad du faktiskt spenderar under en månad, inte bara vad du är skyldig.</li><li><strong>Din bank, på dina villkor.</strong> Du kan hämta in dina egna utgifter och inkomster från din bank. Du loggar in hos din bank, Erana kan bara läsa, och varje betalning väntar i en inkorg tills du bestämmer vad den är: din egen utgift, en inkomst, något att dela med en grupp eller något att ignorera. Inget räknas förrän du har sorterat det, och en betalning som redan finns i en grupp kopplas till den, så att den aldrig räknas två gånger.</li><li><strong>Privat förblir privat.</strong> Dina inkomster, budgetar, egna utgifter och bankbetalningar syns bara för dig. De visas aldrig för medlemmarna i dina grupper.</li><li><strong>Återkommande kostnader utan överraskningar.</strong> Hyra och prenumerationer kan återkomma av sig själva. En återkommande kostnad i en grupp väntar på att du bekräftar den varje gång, så att inget hamnar på andras saldon utan att en människa har tittat på det först.</li><li><strong>Täck upp för en vän.</strong> En person kan välja att betala en annan persons andel i en grupp, för en hel resa eller för gott. Det visas öppet för gruppen, gäller bara nya utgifter och kan avslutas när som helst.</li><li><strong>Gjord för Sverige och Estland.</strong> Appen på engelska, svenska och estniska, svenska kronor och euro, Swish som öppnas med beloppet redan ifyllt när ni gör upp, och dina data lagrade inom EU.</li><li><strong>Dina data är dina.</strong> Inga annonser, ingen försäljning av data, och en fullständig export av allt som finns sparat om dig, när du vill.</li></ul></div>
+<p class="label">Varför jag bygger den</p>
+<div class="card"><p>Jag bygger Erana för att göra mitt eget liv enklare. Alla appar jag provade saknade något, så jag vill ha allt i en app: mina egna inkomster och utgifter, kostnader jag delar med vänner, och att göra upp, med så lite skrivande som möjligt.</p></div>
+<p class="label">Dina data</p>
+<div class="card"><p>Dina data lagras inom EU. Erana säljer dem inte, och appen frågar efter dina kontakter bara om du väljer att hitta vänner, och kontrollerar då bara telefonnummer utan att spara din kontaktlista. Om du kopplar en bank loggar du in hos din bank, Erana kan bara läsa, och det som läses syns bara för dig. Assistenten är frivillig: den ber om ditt godkännande först, och din text och dina foton behandlas inom EU och sparas inte.</p></div>
+<p class="label">Vad som är klart, och vad som kommer</p>
+<div class="card"><p><strong>Fungerar i appen i dag</strong></p>
+<ul><li>Grupper, delning av utgifter, saldon och att göra upp, även att dela en nota post för post.</li><li>Inkomster, återkommande kostnader, budgetar med varningar, och att täcka upp för en väns andel.</li><li>Swish för grupper i kronor: Erana öppnar Swish-appen med den andra medlemmens nummer och beloppet redan ifyllt. Du betalar med BankID och registrerar betalningen i Erana.</li><li>Betalning med banköverföring: du kan lägga till ditt IBAN, och bara en medlem som är skyldig dig pengar ser det.</li><li>Appen på engelska, svenska och estniska. Du väljer språk, eller så följer den din telefon.</li><li>Inloggning med Apple, Google eller en kod via e-post, och ett valfritt applås med Face ID.</li><li>Export av dina data.</li><li>Bankimport, än så länge bara testad på mina egna konton.</li></ul>
+<p><strong>Byggt, och slås på när det har testats</strong></p>
+<ul><li>Läsa kvitton med kameran, så att varje post kan delas mellan dem som hade den.</li><li>En assistent du kan skriva eller prata med. Den fyller i en utgift utifrån en mening och svarar på frågor om dina grupper och dina utgifter. Du kontrollerar allt innan det sparas.</li></ul>
+<p><strong>Planerat, men inte tillgängligt än</strong></p>
+<ul><li>Resor med flera valutor.</li><li>Att betala en vän direkt i Erana. Det kräver en betalpartner och en juridisk granskning först, så det finns inget datum för det.</li><li>Att öppna andra bankers betalskärmar med beloppet redan ifyllt, där banken tillåter det.</li><li>Gratis-, Plus- och Pro-abonnemang, per månad eller per år. Vad som blir gratis och priserna är inte bestämt än.</li></ul>
+<p>Erana är fortfarande under utveckling. En tidig testversion för en liten grupp i Sverige och Estland planeras före den offentliga lanseringen.</p></div>
+</main>
+</body>
+</html>
