@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Erana Tester Guide</title>
+<style>
+/* Layout: one calm reading column; a warning panel first, then install steps, a test list, and how to report. */
+:root {
+  --bg: #f6f8f8;
+  --surface: #ffffff;
+  --fg: #16292b;
+  --muted: #566b6e;
+  --line: #d9e2e3;
+  --accent: #0f6b66;
+  --accent-fg: #ffffff;
+  --note-bg: #fff4da;
+  --note-line: #e8c777;
+  --note-fg: #4a3608;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1819;
+    --surface: #152325;
+    --fg: #e7efef;
+    --muted: #9db2b4;
+    --line: #28393b;
+    --accent: #4fc3bb;
+    --accent-fg: #07211f;
+    --note-bg: #2b2310;
+    --note-line: #6b5518;
+    --note-fg: #f2dfa8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1819;
+  --surface: #152325;
+  --fg: #e7efef;
+  --muted: #9db2b4;
+  --line: #28393b;
+  --accent: #4fc3bb;
+  --accent-fg: #07211f;
+  --note-bg: #2b2310;
+  --note-line: #6b5518;
+  --note-fg: #f2dfa8;
+  color-scheme: dark;
+}
+html { color-scheme: light dark; }
+body { margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px; }
+h1 { font-size: 2.2rem; line-height: 1.15; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h2 { font-size: 1.3rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+p { margin: 0 0 12px; }
+p:last-child { margin-bottom: 0; }
+.eyebrow { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.lead { color: var(--muted); font-size: 1.1rem; margin-top: 12px; }
+.note { background: var(--note-bg); color: var(--note-fg); border: 1px solid var(--note-line); border-radius: 14px; padding: 18px 20px; }
+.note h2 { margin-bottom: 8px; }
+.note ul { margin: 8px 0 0; padding-left: 20px; }
+.note li { margin-bottom: 4px; }
+ol.steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: step; }
+ol.steps li { counter-increment: step; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+ol.steps li::before { content: counter(step); width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-weight: 700; font-size: 0.95rem; }
+.checks { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
+.checks li::before { content: ""; width: 18px; height: 18px; margin-top: 4px; border: 2px solid var(--accent); border-radius: 5px; }
+.report { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.bang { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); font-weight: 800; vertical-align: middle; }
+.tips { margin: 12px 0 0; padding-left: 20px; color: var(--muted); }
+details { border-top: 1px solid var(--line); padding: 12px 0; }
+details:last-of-type { border-bottom: 1px solid var(--line); }
+summary { cursor: pointer; font-weight: 600; }
+summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+details p { margin-top: 8px; color: var(--muted); }
+.mail { font-weight: 600; overflow-wrap: anywhere; }
+footer { color: var(--muted); font-size: 0.9rem; }
+@media (max-width: 480px) { h1 { font-size: 1.8rem; } body { font-size: 16px; } }
+</style>
+
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Early test version</div>
+    <h1>Welcome to the Erana test</h1>
+    <p class="lead">Erana helps friends, families and housemates share costs. You add what was paid, and the app keeps track of who owes whom. Thank you for trying it this early.</p>
+  </header>
+
+  <section class="note">
+    <h2>Please read this first</h2>
+    <p>Erana was built quickly with the help of AI, so expect rough edges.</p>
+    <ul>
+      <li>There are mistakes. Some things will break, show odd text or do the wrong thing.</li>
+      <li>A lot of planned features are still missing.</li>
+      <li>The looks are temporary. Colours, icons and layouts will change.</li>
+      <li>Please do not rely on it for real money yet. Treat the numbers as test data.</li>
+    </ul>
+    <p style="margin-top:12px">That is the reason for this test. Early feedback now is worth more than a polished app later, so tell me everything: bugs, confusing screens, ideas, things you expected to find.</p>
+  </section>
+
+  <section>
+    <h2>Get the app</h2>
+    <ol class="steps">
+      <li><div>Install <strong>TestFlight</strong> from the App Store. It is Apple's free app for testing apps before release. You need an iPhone.</div></li>
+      <li><div>Open the invitation from Apple (an email or a link I send you) on your iPhone and tap <strong>View in TestFlight</strong>.</div></li>
+      <li><div>Tap <strong>Accept</strong>, then <strong>Install</strong>. Erana appears on your home screen.</div></li>
+      <li><div>Open Erana and sign in. Updates arrive through TestFlight. Turn on automatic updates there so you always have the latest version.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>What to try</h2>
+    <p>You do not need to do all of it. Pick what looks interesting, and try to do things the way you would in real life.</p>
+    <ul class="checks">
+      <li><span>Sign in, and sign out again.</span></li>
+      <li><span>Create a group and invite a friend with the invite link. If two of you test together, it is much more useful.</span></li>
+      <li><span>Add expenses: split evenly, by exact amounts, by percentage or item by item.</span></li>
+      <li><span>Scan a receipt and see if the items come out right. Attach a photo of a receipt to an expense.</span></li>
+      <li><span>Add an expense in another currency (EUR, SEK or USD). Each currency keeps its own balance.</span></li>
+      <li><span>Settle up and record a payment.</span></li>
+      <li><span>Swedish users: add your Swedish mobile number in your profile (it is also your Swish number), then use a group in SEK. The person who owes you can open Swish from the app with the amount filled in, pay there, and come back to record it. Swish needs to be installed on the phone. The app never makes the payment itself.</span></li>
+      <li><span>Turn on airplane mode, add an expense, then go back online.</span></li>
+      <li><span>Under My money, set a savings goal and a reminder.</span></li>
+      <li><span>Try the app in a different language, and in dark mode.</span></li>
+      <li><span>Try to break it: empty fields, huge amounts, odd characters.</span></li>
+    </ul>
+  </section>
+
+  <section class="report">
+    <h2>Send feedback with the <span class="bang">!</span> button</h2>
+    <p>This is the most important part. In the test version there is a round <strong>!</strong> button next to your profile picture at the top of the home screen. Tap it to send a report. Everything goes through it, so there is no need to message me separately.</p>
+    <p>Use it for bugs, confusing screens, ideas and missing features alike. Do not wait until you have something big.</p>
+    <ul class="tips">
+      <li>Say what you were doing, what you expected and what happened instead.</li>
+      <li>Add a screenshot from your photos when it helps. It makes a big difference.</li>
+      <li>One report per problem is easier to follow than one long list.</li>
+      <li>Small things count too: a word you do not understand, a button that is hard to hit.</li>
+    </ul>
+    <p style="margin-top:12px">The report is linked to your account so I can ask you a question if something is unclear. It is only read by me.</p>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details>
+      <summary>I did not get an invitation.</summary>
+      <p>Check your spam folder, then tell me the Apple ID email you want me to use. TestFlight invitations only work for the address I added.</p>
+    </details>
+    <details>
+      <summary>The app says it has expired.</summary>
+      <p>TestFlight builds last 90 days. Open TestFlight and look for an update. If there is none, tell me.</p>
+    </details>
+    <details>
+      <summary>Is my data safe?</summary>
+      <p>Your data is stored in the app's own database and used only for the app to work. The privacy policy is at erana.eu/privacy. Even so, this is a test: please do not put in anything you would not want a test user to see.</p>
+    </details>
+    <details>
+      <summary>Will my test data stay?</summary>
+      <p>Probably, but it may be wiped when something big changes. Please do not treat anything in the app as permanent yet.</p>
+    </details>
+    <details>
+      <summary>Can I delete my account?</summary>
+      <p>Yes. Look in Settings. Deleting the account removes your data.</p>
+    </details>
+    <details>
+      <summary>Something is wrong and the ! button does not work.</summary>
+      <p>Email <span class="mail">support@erana.eu</span> with what happened.</p>
+    </details>
+  </section>
+
+  <footer>
+    <p>Thank you for helping. Every report, big or small, makes Erana better.</p>
+    <p>Erana test version. Support: <span class="mail">support@erana.eu</span></p>
+  </footer>
+</main>
+</body>
+</html>
