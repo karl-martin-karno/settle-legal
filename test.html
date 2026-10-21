@@ -123,10 +123,12 @@ footer { color: var(--muted); font-size: 0.9rem; }
     <h2>What to try</h2>
     <p>You do not need to do all of it. Pick what looks interesting, and try to do things the way you would in real life.</p>
     <ul class="checks">
-      <li><span>Sign in, and sign out again.</span></li>
+      <li><span>Sign in, and sign out again. If you sign in with an email code, the email comes from noreply@erana.eu and the code has 6 digits.</span></li>
       <li><span>Create a group and invite a friend with the invite link. If two of you test together, it is much more useful.</span></li>
       <li><span>Add expenses: split evenly, by exact amounts, by percentage or item by item.</span></li>
       <li><span>Scan a receipt and see if the items come out right. Attach a photo of a receipt to an expense.</span></li>
+      <li><span>On Add expense in a group, tap Write it (or the microphone) and write or say something like "Dinner 540 SEK with Anna and Tom, I paid". The first time you agree to a short notice about the AI assistant. Check everything it fills in: nothing is saved until you tap Save.</span></li>
+      <li><span>Open the Assistant tab and ask a question about your spending or your groups, for example "How much did I spend on food this month?". It can make mistakes, so check the answer.</span></li>
       <li><span>Add an expense in another currency (EUR, SEK or USD). Each currency keeps its own balance.</span></li>
       <li><span>Settle up and record a payment.</span></li>
       <li><span>Swedish users: add your Swedish mobile number in your profile (it is also your Swish number), then use a group in SEK. The person who owes you can open Swish from the app with the amount filled in, pay there, and come back to record it. Swish needs to be installed on the phone. The app never makes the payment itself.</span></li>
@@ -136,6 +138,7 @@ footer { color: var(--muted); font-size: 0.9rem; }
       <li><span>In the newest build: under My money, add an expense of your own, then tap it to change or delete it. The earlier versions are kept, and only you can see them.</span></li>
       <li><span>In the newest build: search and filter your own expenses by text, category, date or amount. An amount range compares one currency at a time.</span></li>
       <li><span>In the newest build: on an expense form, write a description and tap Suggest a category (the assistant must be switched on).</span></li>
+      <li><span>In the newest build: the same Write it, microphone and Scan a receipt are on the form for your own expense (under My money), and on the short card there is a Choose a photo button for a receipt from your photo library.</span></li>
       <li><span>In the newest build: open the full report. Your own spending and your share of group expenses are shown apart. With expenses in more than one currency, each currency has its own block with its code.</span></li>
       <li><span>Try to break it: empty fields, huge amounts, odd characters.</span></li>
     </ul>
@@ -143,7 +146,7 @@ footer { color: var(--muted); font-size: 0.9rem; }
 
   <section class="report">
     <h2>Send feedback with the <span class="bang">!</span> button</h2>
-    <p>This is the most important part. In the test version there is a round <strong>!</strong> button next to your profile picture at the top of the home screen. Tap it to send a report. Everything goes through it, so there is no need to message me separately.</p>
+    <p>This is the most important part. In the test version there is a round <strong>!</strong> button next to your round profile bubble at the top right of the main screens (Home, My money, Shared and Assistant). Tap it to send a report. Everything goes through it, so there is no need to message me separately.</p>
     <p>Use it for bugs, confusing screens, ideas and missing features alike. Do not wait until you have something big.</p>
     <ul class="tips">
       <li>Say what you were doing, what you expected and what happened instead.</li>
@@ -161,12 +164,16 @@ footer { color: var(--muted); font-size: 0.9rem; }
       <p>Check your spam folder, then tell me the Apple ID email you want me to use. TestFlight invitations only work for the address I added.</p>
     </details>
     <details>
+      <summary>I did not get the sign-in code.</summary>
+      <p>Check your spam folder. The email comes from noreply@erana.eu and arrives within a minute or two. You can ask for a new code once a minute. If it still does not come, tell me which email address you used.</p>
+    </details>
+    <details>
       <summary>The app says it has expired.</summary>
       <p>TestFlight builds last 90 days. Open TestFlight and look for an update. If there is none, tell me.</p>
     </details>
     <details>
       <summary>Is my data safe?</summary>
-      <p>Your data is stored in the app's own database and used only for the app to work. The privacy policy is at erana.eu/privacy. Even so, this is a test: please do not put in anything you would not want a test user to see.</p>
+      <p>Your data is stored in the app's own database and used only for the app to work. The privacy policy is at erana.eu/privacy. If you use the AI assistant, the sentence you write, the receipt photo or your question is sent to an AI model in the EU to answer that one request, and Erana does not keep it. Even so, this is a test: please do not put in anything you would not want a test user to see.</p>
     </details>
     <details>
       <summary>Will my test data stay?</summary>
