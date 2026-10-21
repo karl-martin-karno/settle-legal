@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erana dashboard</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%201024%201024%22%20aria-hidden%3D%22true%22%3E%3Crect%20width%3D%221024%22%20height%3D%221024%22%20rx%3D%22230%22%20fill%3D%22%230E3A32%22%2F%3E%3Cpath%20d%3D%22M%20242.81%20782.22%20C%20297.37%20699.87%20324.13%20602.07%20330.31%20491.93%20C%20337.51%20365.31%20400.31%20328.25%20486.78%20323.10%20C%20388.98%20366.34%20364.28%20443.54%20360.16%20535.16%20C%20352.95%20657.66%20308.69%20737.96%20242.81%20782.22%20Z%22%20fill%3D%22%235b1f2a%22%2F%3E%3Cpath%20d%3D%22M%20242.81%20782.22%20L%20242.81%20442.51%20C%20242.81%20308.69%20327.22%20225.31%20465.16%20220.16%20L%20781.19%20220.16%20C%20729.72%20276.78%20698.84%20339.57%20628.84%20366.34%20C%20568.10%20390.01%20491.93%20371.48%20431.19%20387.96%20C%20353.98%20407.51%20320.01%20455.90%20320.01%20537.22%20C%20318.98%20635.02%20291.19%20714.28%20242.81%20782.22%20Z%22%20fill%3D%22%23e7ece6%22%2F%3E%3Cpath%20d%3D%22M%20362.22%20584.57%20C%20376.63%20496.04%20430.16%20447.66%20510.46%20440.46%20C%20594.87%20433.25%20656.63%20433.25%20694.72%20425.01%20C%20667.96%20483.69%20620.60%20537.22%20558.84%20551.63%20C%20490.90%20567.07%20419.87%20541.34%20362.22%20584.57%20Z%22%20fill%3D%22%23b5c8bf%22%2F%3E%3Cpath%20d%3D%22M%20263.40%20802.81%20C%20318.98%20722.52%20377.66%20674.13%20476.49%20658.69%20C%20571.19%20644.28%20680.31%20655.60%20763.69%20644.28%20C%20729.72%20709.13%20685.46%20764.72%20606.19%20786.34%20C%20521.78%20811.05%20377.66%20801.78%20263.40%20802.81%20Z%22%20fill%3D%22%23d5dfd9%22%2F%3E%3C%2Fsvg%3E">
+<meta name="robots" content="noindex, nofollow"><style>[hidden] { display: none !important; }
+.dash-head { margin-bottom: 8px; }
+.muted { color: var(--muted); font-size: 0.9rem; margin: 0; }
+.message { min-height: 1.4em; margin: 10px 0 0; color: var(--muted); }
+form { display: grid; gap: 10px; }
+label { font-size: 0.85rem; color: var(--muted); }
+input { font: inherit; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); }
+button { font: inherit; padding: 12px 16px; border: 0; border-radius: 12px; background: var(--accent); color: var(--bg); font-weight: 600; cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: default; }
+button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.toolbar .muted { flex: 1 1 100%; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px; }
+.num { display: block; font-size: 1.9rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.what { display: block; color: var(--muted); font-size: 0.85rem; }
+dl { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; margin: 0 0 12px; }
+dt { color: var(--muted); }
+dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.table th:nth-child(n+2), .table td:nth-child(n+2) { text-align: right; }
+.env-tabs { display: flex; gap: 8px; margin: 16px 0 4px; }
+.tab { flex: 1; background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.tab:disabled { opacity: 0.4; cursor: default; }
+.code-row { display: grid; gap: 6px; }
+</style>
+<style>
+:root { color-scheme: light dark; --bg: #F5F2EE; --card: #FFFFFF; --text: #1F1F1F; --muted: #626B68; --line: #DADADA; --accent: #0E3A32; --label: #626B68; --eyebrow: #C9C4BC; --hero-bg: #0E3A32; --hero-text: #F5F2EE; --hero-edge: transparent; --burgundy: #5B1F2A; }
+@media (prefers-color-scheme: dark) { :root { --bg: #121514; --card: #1D2523; --text: #F5F2EE; --muted: #AAB8B2; --line: #2F3836; --accent: #74B5A2; --label: #AAB8B2; --eyebrow: #74B5A2; --hero-bg: #1D2523; --hero-text: #F5F2EE; --hero-edge: #2F3836; --burgundy: #9A4A59; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 2rem; line-height: 1.2; font-weight: 600; }
+h2 { margin-top: 2rem; font-size: 1.25rem; }
+a { color: var(--accent); }
+nav { display: flex; gap: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+.table { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 8px; border-bottom: 1px solid var(--line); }
+.home main { max-width: 640px; padding-top: 32px; }
+.hero { background: var(--hero-bg); color: var(--hero-text); border: 1px solid var(--hero-edge); border-radius: 24px; padding: 28px 24px 30px; }
+.hero .logo { display: block; width: 56px; height: 56px; margin-bottom: 20px; }
+.hero .eyebrow { margin: 0; color: var(--eyebrow); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.hero h1 { margin: 6px 0 8px; font-size: 2.6rem; line-height: 1.1; font-weight: 300; letter-spacing: 0.28em; text-transform: uppercase; }
+.hero::after { content: ""; display: block; width: 48px; height: 3px; margin-top: 22px; border-radius: 2px; background: var(--burgundy); }
+.hero p { margin: 0 0 12px; font-size: 1.05rem; }
+.hero p:last-child { margin-bottom: 0; opacity: 0.85; font-size: 0.95rem; }
+.label { margin: 32px 0 8px 4px; color: var(--label); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; box-shadow: 0 4px 14px rgba(31, 31, 31, 0.06); }
+.card p { margin: 0 0 12px; }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+.card ul { margin: 0 0 12px; padding-left: 20px; }
+.card li { margin-bottom: 6px; }
+nav.langs { justify-content: flex-end; gap: 6px; padding: 0 0 12px; border: 0; font-size: 0.85rem; }
+nav.langs a { padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); text-decoration: none; }
+nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 600; }
+</style>
+</head>
+<body class="private">
+<main>
+<div class="dashboard">
+<header class="dash-head">
+  <h1>Erana dashboard</h1>
+  <p class="muted">For the founder only. Counts and sums, with no names, emails or expense text.</p>
+</header>
+
+<nav class="env-tabs" aria-label="Environment" role="tablist">
+  <button type="button" class="tab" id="tab-live" role="tab" aria-selected="false" disabled>Live</button>
+  <button type="button" class="tab" id="tab-dev" role="tab" aria-selected="false" disabled>Dev</button>
+</nav>
+
+<section id="sign-in" class="card" hidden>
+  <form id="send-code-form">
+    <label for="email">Email address</label>
+    <input id="email" type="email" autocomplete="email" required>
+    <button type="submit">Send codes</button>
+  </form>
+  <form id="verify-form" hidden>
+    <p class="muted">Each project sends its own code to the same address. Enter both, then sign in once.</p>
+    <div class="code-row" id="code-dev-row">
+      <label for="code-dev">Dev code</label>
+      <input id="code-dev" type="text" inputmode="numeric" autocomplete="one-time-code">
+    </div>
+    <div class="code-row" id="code-live-row">
+      <label for="code-live">Live code</label>
+      <input id="code-live" type="text" inputmode="numeric" autocomplete="one-time-code">
+    </div>
+    <button type="submit">Sign in</button>
+  </form>
+  <p id="sign-in-message" class="message" role="status"></p>
+</section>
+
+<section id="dashboard" hidden>
+  <div class="toolbar">
+    <span id="updated" class="muted"></span>
+    <button type="button" id="refresh">Refresh</button>
+    <button type="button" id="sign-out" class="secondary">Sign out</button>
+  </div>
+  <p id="dash-message" class="message" role="alert"></p>
+
+  <p class="label">Users</p>
+  <div class="card stats">
+    <div><span class="num" id="registered">–</span><span class="what">Registered accounts</span></div>
+    <div><span class="num" id="signed-7">–</span><span class="what">Signed in within 7 days</span></div>
+    <div><span class="num" id="signed-30">–</span><span class="what">Signed in within 30 days</span></div>
+  </div>
+
+  <p class="label">App data</p>
+  <div class="card">
+    <dl>
+      <dt>Groups</dt><dd id="groups">–</dd>
+      <dt>Group members</dt><dd id="members">–</dd>
+      <dt>Group expenses</dt><dd id="group-expenses">–</dd>
+      <dt>Own expenses</dt><dd id="personal-expenses">–</dd>
+      <dt>Database size</dt><dd id="db-size">–</dd>
+    </dl>
+  </div>
+
+  <p class="label">AI this month</p>
+  <div class="card">
+    <dl>
+      <dt>People who used it</dt><dd id="ai-people">–</dd>
+      <dt>Requests</dt><dd id="ai-requests">–</dd>
+      <dt>Tokens</dt><dd id="ai-tokens">–</dd>
+      <dt>Estimated cost</dt><dd id="ai-cost">–</dd>
+    </dl>
+    <p class="muted">The cost is an estimate from token counts. The real bill is in Google Cloud billing.</p>
+  </div>
+
+  <p class="label">Last 30 days</p>
+  <div class="card table">
+    <table>
+      <thead><tr><th>Day</th><th>Requests</th><th>Estimated cost</th></tr></thead>
+      <tbody id="ai-days"></tbody>
+    </table>
+  </div>
+</section>
+
+<noscript><p class="card">This page needs JavaScript.</p></noscript>
+</div>
+<script>window.ERANA_DASHBOARD = {"live":{"name":"Live","url":"https://tzxjfihxzvhspbxyturg.supabase.co","key":"sb_publishable_Q1OhLMPXTd6fmMqzsYW7nw_o6iS584I"},"dev":{"name":"Dev","url":"https://sprdiyabhzbkpwkebtae.supabase.co","key":"sb_publishable_5zF5_C26XfR_HooE01JNRw_z3PxPy4w"}};</script>
+<script>
+// The founder's private dashboard (decided 21 October 2026). One sign-in covers both tabs, Live and Dev. Each project sends its
+// own one-time code to the same address, and the page keeps one session per project. The browser stays signed in until Sign
+// out is pressed: each short-lived access token is renewed with its refresh token. The database checks the account and
+// returns only counts and sums, so this page shows what it is given and nothing more. Nothing is logged. The numbers of the
+// open tab refresh once a minute while the page is open and visible.
+(function () {
+  'use strict';
+
+  var REFRESH_MS = 60000;
+  var RENEW_BEFORE_MS = 120000;
+  var PROJECTS = ['live', 'dev'];
+  var environments = window.ERANA_DASHBOARD || {};
+  var current = '';
+  var pendingEmail = '';
+  var timer = null;
+  // A refresh token works once, so only one renewal per project runs at a time.
+  var renewals = {};
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function setText(id, text) {
+    byId(id).textContent = text;
+  }
+
+  function count(value) {
+    return Number(value).toLocaleString('en-GB');
+  }
+
+  // Costs are stored in millionths of a US dollar.
+  function usd(micro, digits) {
+    return '$' + (Number(micro) / 1000000).toFixed(digits);
+  }
+
+  function configuredProjects() {
+    return PROJECTS.filter(function (id) {
+      return Boolean(environments[id]);
+    });
+  }
+
+  function sessionKey(id) {
+    return 'erana-dashboard-session-' + id;
+  }
+
+  function loadStored(id) {
+    try {
+      var saved = JSON.parse(window.localStorage.getItem(sessionKey(id)) || 'null');
+      if (saved && typeof saved.access_token === 'string' && typeof saved.refresh_token === 'string') {
+        return saved;
+      }
+    } catch (error) {
+      // Storage can be blocked. Then the codes are simply asked for again.
+    }
+    return null;
+  }
+
+  function saveSession(id, session) {
+    try {
+      window.localStorage.setItem(sessionKey(id), JSON.stringify(session));
+    } catch (error) {
+      // Without storage the codes are needed again after a reload.
+    }
+  }
+
+  function clearSession(id) {
+    try {
+      window.localStorage.removeItem(sessionKey(id));
+    } catch (error) {
+      // Nothing to clear.
+    }
+  }
+
+  function sessionFrom(data) {
+    return {
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
+      expires_at: Number(data.expires_at) || Math.floor(Date.now() / 1000) + 3600
+    };
+  }
+
+  // One request to the sign-in service or the database. A failure carries only the HTTP status.
+  function request(env, path, body, token) {
+    var headers = { apikey: env.key, 'Content-Type': 'application/json' };
+    if (token) {
+      headers.Authorization = 'Bearer ' + token;
+    }
+    return fetch(env.url + path, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(body),
+      cache: 'no-store',
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer'
+    }).then(function (response) {
+      return response.text().then(function (text) {
+        if (!response.ok) {
+          var failure = new Error('request failed');
+          failure.status = response.status;
+          throw failure;
+        }
+        return text ? JSON.parse(text) : null;
+      });
+    });
+  }
+
+  function statusOf(error) {
+    return error && typeof error.status === 'number' ? error.status : 0;
+  }
+
+  // Renews the access token. A refresh token that the server refuses (400 or 401) is dropped, so the page asks for codes
+  // again. Other failures, such as being offline, keep the stored session for the next try.
+  function renew(id, stored) {
+    if (!renewals[id]) {
+      renewals[id] = request(environments[id], '/auth/v1/token?grant_type=refresh_token', { refresh_token: stored.refresh_token }, null)
+        .then(function (data) {
+          if (!data || typeof data.access_token !== 'string' || typeof data.refresh_token !== 'string') {
+            throw new Error('no session');
+          }
+          var session = sessionFrom(data);
+          saveSession(id, session);
+          return session;
+        })
+        .catch(function (error) {
+          if (statusOf(error) === 400 || statusOf(error) === 401) {
+            clearSession(id);
+          }
+          return null;
+        })
+        .then(function (session) {
+          delete renewals[id];
+          return session;
+        });
+    }
+    return renewals[id];
+  }
+
+  // The session to use for a project, renewed first if its access token is about to run out. Resolves to null when the
+  // page must ask for codes again.
+  function currentSession(id) {
+    var stored = loadStored(id);
+    if (!stored) {
+      return Promise.resolve(null);
+    }
+    if (stored.expires_at * 1000 > Date.now() + RENEW_BEFORE_MS) {
+      return Promise.resolve(stored);
+    }
+    return renew(id, stored);
+  }
+
+  function markTabs() {
+    PROJECTS.forEach(function (id) {
+      var tab = byId('tab-' + id);
+      tab.disabled = !environments[id];
+      tab.setAttribute('aria-selected', id === current ? 'true' : 'false');
+    });
+  }
+
+  function stopRefresh() {
+    if (timer !== null) {
+      window.clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  function startRefresh() {
+    stopRefresh();
+    timer = window.setInterval(function () {
+      if (!document.hidden && !byId('dashboard').hidden) {
+        loadDashboard(current);
+      }
+    }, REFRESH_MS);
+  }
+
+  function showSignIn(message) {
+    stopRefresh();
+    byId('dashboard').hidden = true;
+    byId('sign-in').hidden = false;
+    byId('verify-form').hidden = true;
+    byId('code-dev').value = '';
+    byId('code-live').value = '';
+    byId('code-live-row').hidden = !environments.live;
+    byId('code-dev-row').hidden = !environments.dev;
+    setText('sign-in-message', message);
+  }
+
+  function showDashboard() {
+    byId('sign-in').hidden = true;
+    byId('dashboard').hidden = false;
+    startRefresh();
+  }
+
+  function dayRow(day) {
+    var row = document.createElement('tr');
+    [day.day, count(day.requests), usd(day.cost_micro, 4)].forEach(function (text) {
+      var cell = document.createElement('td');
+      cell.textContent = String(text);
+      row.appendChild(cell);
+    });
+    return row;
+  }
+
+  function render(id, data) {
+    var users = data.users;
+    var app = data.app;
+    var month = data.ai.this_month;
+    setText('updated', environments[id].name + ' · updated ' + new Date(data.generated_at).toLocaleString('en-GB') + ' · refreshes every minute');
+    setText('registered', count(users.registered));
+    setText('signed-7', count(users.signed_in_7_days));
+    setText('signed-30', count(users.signed_in_30_days));
+    setText('groups', count(app.groups));
+    setText('members', count(app.group_members));
+    setText('group-expenses', count(app.group_expenses));
+    setText('personal-expenses', count(app.personal_expenses));
+    setText('db-size', (Number(app.database_bytes) / 1048576).toFixed(1) + ' MB');
+    setText('ai-people', count(month.people));
+    setText('ai-requests', count(month.requests));
+    setText('ai-tokens', count(month.input_tokens) + ' in, ' + count(month.output_tokens) + ' out');
+    setText('ai-cost', usd(month.cost_micro, 2));
+    var rows = byId('ai-days');
+    rows.textContent = '';
+    data.ai.by_day.forEach(function (day) {
+      rows.appendChild(dayRow(day));
+    });
+  }
+
+  function enableRefresh() {
+    byId('refresh').disabled = false;
+  }
+
+  // Results for a tab that is no longer selected are dropped, so one project never shows another's numbers.
+  function loadDashboard(id) {
+    setText('dash-message', '');
+    byId('refresh').disabled = true;
+    currentSession(id)
+      .then(function (session) {
+        if (!session) {
+          if (id === current) {
+            showSignIn('Sign in again to see ' + environments[id].name + '.');
+          }
+          return undefined;
+        }
+        return request(environments[id], '/rest/v1/rpc/admin_dashboard', {}, session.access_token).then(
+          function (data) {
+            if (id === current) {
+              render(id, data);
+              showDashboard();
+            }
+          },
+          function (error) {
+            if (id !== current) {
+              return;
+            }
+            var status = statusOf(error);
+            if (status === 401 || status === 403) {
+              clearSession(id);
+              showSignIn(status === 401 ? 'Your session has ended. Sign in again.' : 'This account is not on the admin list for ' + environments[id].name + '.');
+            } else {
+              showDashboard();
+              setText('dash-message', status === 429 ? 'Too many requests. Wait a minute, then refresh.' : 'Could not load the numbers. Try Refresh again.');
+            }
+          }
+        );
+      })
+      .then(enableRefresh, enableRefresh);
+  }
+
+  function select(id) {
+    if (!environments[id]) {
+      return;
+    }
+    stopRefresh();
+    current = id;
+    markTabs();
+    loadDashboard(id);
+  }
+
+  byId('tab-live').addEventListener('click', function () {
+    select('live');
+  });
+
+  byId('tab-dev').addEventListener('click', function () {
+    select('dev');
+  });
+
+  // One code is sent by each configured project, to the same address.
+  byId('send-code-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    pendingEmail = byId('email').value.trim();
+    setText('sign-in-message', 'Sending…');
+    var failed = [];
+    Promise.all(configuredProjects().map(function (id) {
+      return request(environments[id], '/auth/v1/otp', { email: pendingEmail, create_user: false }, null).catch(function () {
+        failed.push(environments[id].name);
+      });
+    })).then(function () {
+      if (failed.length > 0) {
+        setText('sign-in-message', 'Could not send a code for ' + failed.join(' and ') + '. Check the address and try again.');
+        return;
+      }
+      byId('verify-form').hidden = false;
+      byId(configuredProjects()[0] === 'live' ? 'code-live' : 'code-dev').focus();
+      setText('sign-in-message', 'If this address can sign in, the codes are on their way. Enter them below.');
+    });
+  });
+
+  byId('verify-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    setText('sign-in-message', 'Checking…');
+    Promise.all(configuredProjects().map(function (id) {
+      var token = byId('code-' + id).value.trim();
+      return request(environments[id], '/auth/v1/verify', { type: 'email', email: pendingEmail, token: token }, null)
+        .then(function (data) {
+          if (!data || typeof data.access_token !== 'string' || typeof data.refresh_token !== 'string') {
+            throw new Error('no session');
+          }
+          return { id: id, session: sessionFrom(data) };
+        })
+        .catch(function () {
+          return { id: id, failed: true };
+        });
+    })).then(function (results) {
+      var failed = results.filter(function (result) {
+        return result.failed;
+      }).map(function (result) {
+        return environments[result.id].name;
+      });
+      if (failed.length > 0) {
+        setText('sign-in-message', 'The code for ' + failed.join(' and ') + ' is wrong or has expired. Send new codes.');
+        return;
+      }
+      results.forEach(function (result) {
+        saveSession(result.id, result.session);
+      });
+      showSignIn('');
+      select(configuredProjects()[0]);
+    });
+  });
+
+  byId('refresh').addEventListener('click', function () {
+    loadDashboard(current);
+  });
+
+  // Ends each project's session on the server as well, then forgets it in this browser.
+  byId('sign-out').addEventListener('click', function () {
+    configuredProjects().forEach(function (id) {
+      var stored = loadStored(id);
+      if (stored) {
+        request(environments[id], '/auth/v1/logout', {}, stored.access_token).catch(function () {
+          // The local session is removed below either way.
+        });
+      }
+      clearSession(id);
+    });
+    byId('email').value = '';
+    pendingEmail = '';
+    showSignIn('You are signed out.');
+  });
+
+  var first = configuredProjects()[0];
+  markTabs();
+  if (!first) {
+    showSignIn('The dashboard is not set up for any project yet.');
+  } else {
+    Promise.all(configuredProjects().map(currentSession)).then(function (sessions) {
+      var allSignedIn = sessions.every(function (session) {
+        return Boolean(session);
+      });
+      if (allSignedIn) {
+        select(first);
+      } else {
+        current = first;
+        markTabs();
+        showSignIn('');
+      }
+    });
+  }
+})();
+</script>
+</main>
+</body>
+</html>
