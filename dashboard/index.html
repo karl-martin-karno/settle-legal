@@ -28,7 +28,6 @@ dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .tab { flex: 1; background: transparent; color: var(--muted); border: 1px solid var(--line); }
 .tab[aria-selected="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 .tab:disabled { opacity: 0.4; cursor: default; }
-.code-row { display: grid; gap: 6px; }
 </style>
 <style>
 :root { color-scheme: light dark; --bg: #F5F2EE; --card: #FFFFFF; --text: #1F1F1F; --muted: #626B68; --line: #DADADA; --accent: #0E3A32; --label: #626B68; --eyebrow: #C9C4BC; --hero-bg: #0E3A32; --hero-text: #F5F2EE; --hero-edge: transparent; --burgundy: #5B1F2A; }
@@ -75,21 +74,15 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
 </nav>
 
 <section id="sign-in" class="card" hidden>
+  <p id="sign-in-title" class="label"></p>
   <form id="send-code-form">
     <label for="email">Email address</label>
     <input id="email" type="email" autocomplete="email" required>
-    <button type="submit">Send codes</button>
+    <button type="submit">Send code</button>
   </form>
   <form id="verify-form" hidden>
-    <p class="muted">Each project sends its own code to the same address. Enter both, then sign in once.</p>
-    <div class="code-row" id="code-dev-row">
-      <label for="code-dev">Dev code</label>
-      <input id="code-dev" type="text" inputmode="numeric" autocomplete="one-time-code">
-    </div>
-    <div class="code-row" id="code-live-row">
-      <label for="code-live">Live code</label>
-      <input id="code-live" type="text" inputmode="numeric" autocomplete="one-time-code">
-    </div>
+    <label for="code">Code</label>
+    <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" required>
     <button type="submit">Sign in</button>
   </form>
   <p id="sign-in-message" class="message" role="status"></p>
@@ -145,11 +138,11 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
 </div>
 <script>window.ERANA_DASHBOARD = {"live":{"name":"Live","url":"https://tzxjfihxzvhspbxyturg.supabase.co","key":"sb_publishable_Q1OhLMPXTd6fmMqzsYW7nw_o6iS584I"},"dev":{"name":"Dev","url":"https://sprdiyabhzbkpwkebtae.supabase.co","key":"sb_publishable_5zF5_C26XfR_HooE01JNRw_z3PxPy4w"}};</script>
 <script>
-// The founder's private dashboard (decided 21 October 2026). One sign-in covers both tabs, Live and Dev. Each project sends its
-// own one-time code to the same address, and the page keeps one session per project. The browser stays signed in until Sign
-// out is pressed: each short-lived access token is renewed with its refresh token. The database checks the account and
-// returns only counts and sums, so this page shows what it is given and nothing more. Nothing is logged. The numbers of the
-// open tab refresh once a minute while the page is open and visible.
+// The founder's private dashboard (decided 21 October 2026). It has two tabs, Live and Dev, and each tab has its own sign-in: its own
+// email address and its own one-time code, and the page keeps one session per project. The browser stays signed in until Sign out
+// is pressed: each short-lived access token is renewed with its refresh token. The database checks the account and returns only
+// counts and sums, so this page shows what it is given and nothing more. Nothing is logged. The numbers of the open tab refresh
+// once a minute while the page is open and visible.
 (function () {
   'use strict';
 
@@ -197,7 +190,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
         return saved;
       }
     } catch (error) {
-      // Storage can be blocked. Then the codes are simply asked for again.
+      // Storage can be blocked. Then a code is simply asked for again.
     }
     return null;
   }
@@ -206,7 +199,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     try {
       window.localStorage.setItem(sessionKey(id), JSON.stringify(session));
     } catch (error) {
-      // Without storage the codes are needed again after a reload.
+      // Without storage a code is needed again after a reload.
     }
   }
 
@@ -255,7 +248,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     return error && typeof error.status === 'number' ? error.status : 0;
   }
 
-  // Renews the access token. A refresh token that the server refuses (400 or 401) is dropped, so the page asks for codes
+  // Renews the access token. A refresh token that the server refuses (400 or 401) is dropped, so the page asks for a code
   // again. Other failures, such as being offline, keep the stored session for the next try.
   function renew(id, stored) {
     if (!renewals[id]) {
@@ -283,7 +276,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
   }
 
   // The session to use for a project, renewed first if its access token is about to run out. Resolves to null when the
-  // page must ask for codes again.
+  // page must ask for a code again.
   function currentSession(id) {
     var stored = loadStored(id);
     if (!stored) {
@@ -319,15 +312,17 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     }, REFRESH_MS);
   }
 
+  // The sign-in form is always for the open tab. The email and the code are cleared, so one project's form never carries over
+  // to the other.
   function showSignIn(message) {
     stopRefresh();
+    pendingEmail = '';
     byId('dashboard').hidden = true;
     byId('sign-in').hidden = false;
     byId('verify-form').hidden = true;
-    byId('code-dev').value = '';
-    byId('code-live').value = '';
-    byId('code-live-row').hidden = !environments.live;
-    byId('code-dev-row').hidden = !environments.dev;
+    byId('email').value = '';
+    byId('code').value = '';
+    setText('sign-in-title', current && environments[current] ? 'Sign in to ' + environments[current].name : 'Sign in');
     setText('sign-in-message', message);
   }
 
@@ -383,7 +378,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
       .then(function (session) {
         if (!session) {
           if (id === current) {
-            showSignIn('Sign in again to see ' + environments[id].name + '.');
+            showSignIn('');
           }
           return undefined;
         }
@@ -430,78 +425,65 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     select('dev');
   });
 
-  // One code is sent by each configured project, to the same address.
+  // A code is sent by the open tab's project only.
   byId('send-code-form').addEventListener('submit', function (event) {
     event.preventDefault();
+    var id = current;
     pendingEmail = byId('email').value.trim();
     setText('sign-in-message', 'Sending…');
-    var failed = [];
-    Promise.all(configuredProjects().map(function (id) {
-      return request(environments[id], '/auth/v1/otp', { email: pendingEmail, create_user: false }, null).catch(function () {
-        failed.push(environments[id].name);
-      });
-    })).then(function () {
-      if (failed.length > 0) {
-        setText('sign-in-message', 'Could not send a code for ' + failed.join(' and ') + '. Check the address and try again.');
-        return;
+    request(environments[id], '/auth/v1/otp', { email: pendingEmail, create_user: false }, null).then(
+      function () {
+        if (id !== current) {
+          return;
+        }
+        byId('verify-form').hidden = false;
+        byId('code').focus();
+        setText('sign-in-message', 'If this address can sign in to ' + environments[id].name + ', the code is on its way. Enter it below.');
+      },
+      function () {
+        if (id === current) {
+          setText('sign-in-message', 'Could not send a code. Check the address and try again.');
+        }
       }
-      byId('verify-form').hidden = false;
-      byId(configuredProjects()[0] === 'live' ? 'code-live' : 'code-dev').focus();
-      setText('sign-in-message', 'If this address can sign in, the codes are on their way. Enter them below.');
-    });
+    );
   });
 
   byId('verify-form').addEventListener('submit', function (event) {
     event.preventDefault();
+    var id = current;
     setText('sign-in-message', 'Checking…');
-    Promise.all(configuredProjects().map(function (id) {
-      var token = byId('code-' + id).value.trim();
-      return request(environments[id], '/auth/v1/verify', { type: 'email', email: pendingEmail, token: token }, null)
-        .then(function (data) {
-          if (!data || typeof data.access_token !== 'string' || typeof data.refresh_token !== 'string') {
-            throw new Error('no session');
-          }
-          return { id: id, session: sessionFrom(data) };
-        })
-        .catch(function () {
-          return { id: id, failed: true };
-        });
-    })).then(function (results) {
-      var failed = results.filter(function (result) {
-        return result.failed;
-      }).map(function (result) {
-        return environments[result.id].name;
+    request(environments[id], '/auth/v1/verify', { type: 'email', email: pendingEmail, token: byId('code').value.trim() }, null)
+      .then(function (data) {
+        if (!data || typeof data.access_token !== 'string' || typeof data.refresh_token !== 'string') {
+          throw new Error('no session');
+        }
+        saveSession(id, sessionFrom(data));
+        if (id === current) {
+          loadDashboard(id);
+        }
+      })
+      .catch(function () {
+        if (id === current) {
+          setText('sign-in-message', 'The code is wrong or has expired. Send a new code.');
+        }
       });
-      if (failed.length > 0) {
-        setText('sign-in-message', 'The code for ' + failed.join(' and ') + ' is wrong or has expired. Send new codes.');
-        return;
-      }
-      results.forEach(function (result) {
-        saveSession(result.id, result.session);
-      });
-      showSignIn('');
-      select(configuredProjects()[0]);
-    });
   });
 
   byId('refresh').addEventListener('click', function () {
     loadDashboard(current);
   });
 
-  // Ends each project's session on the server as well, then forgets it in this browser.
+  // Ends the open tab's session on the server as well, then forgets it in this browser. The other tab stays signed in.
   byId('sign-out').addEventListener('click', function () {
-    configuredProjects().forEach(function (id) {
-      var stored = loadStored(id);
-      if (stored) {
-        request(environments[id], '/auth/v1/logout', {}, stored.access_token).catch(function () {
-          // The local session is removed below either way.
-        });
-      }
-      clearSession(id);
-    });
-    byId('email').value = '';
-    pendingEmail = '';
-    showSignIn('You are signed out.');
+    var id = current;
+    var stored = loadStored(id);
+    if (stored) {
+      request(environments[id], '/auth/v1/logout', {}, stored.access_token).catch(function () {
+        // The local session is removed below either way.
+      });
+    }
+    clearSession(id);
+    showSignIn('You are signed out of ' + environments[id].name + '.');
   });
 
   var first = configuredProjects()[0];
@@ -509,18 +491,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
   if (!first) {
     showSignIn('The dashboard is not set up for any project yet.');
   } else {
-    Promise.all(configuredProjects().map(currentSession)).then(function (sessions) {
-      var allSignedIn = sessions.every(function (session) {
-        return Boolean(session);
-      });
-      if (allSignedIn) {
-        select(first);
-      } else {
-        current = first;
-        markTabs();
-        showSignIn('');
-      }
-    });
+    select(first);
   }
 })();
 </script>
