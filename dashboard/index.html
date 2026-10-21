@@ -129,10 +129,16 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     <p class="muted">The cost is an estimate from token counts. The real bill is in Google Cloud billing.</p>
   </div>
 
-  <p class="label">Bugs and ideas</p>
+  <p class="label">Bugs</p>
   <div class="card">
-    <p id="feedback-message" class="muted"></p>
-    <div id="feedback-list"></div>
+    <p id="bugs-message" class="muted"></p>
+    <div id="bugs-list"></div>
+  </div>
+
+  <p class="label">Requests and ideas</p>
+  <div class="card">
+    <p id="ideas-message" class="muted"></p>
+    <div id="ideas-list"></div>
   </div>
 
   <p class="label">Last 30 days</p>
@@ -377,36 +383,126 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
   }
 
   // The bugs, requests and ideas (read only). Each message is shown as plain text, never as HTML. No sender is shown.
-  function renderFeedback(data) {
-    var list = byId('feedback-list');
-    list.textContent = '';
-    var items = [];
-    (data.tester_reports || []).forEach(function (r) {
-      items.push({
-        meta: [r.report_type, r.status, 'build ' + r.build_number, r.platform, r.screen, new Date(r.created_at).toLocaleDateString('en-GB')]
-          .filter(Boolean).join(' · '),
-        text: r.message
+  function feedbackRow(meta, text) {
+    var row = document.createElement('div');
+    row.className = 'fb-item';
+    var metaEl = document.createElement('div');
+    metaEl.className = 'fb-meta';
+    metaEl.textContent = meta;
+    var textEl = document.createElement('div');
+    textEl.className = 'fb-text';
+    textEl.textContent = String(text || '');
+    row.appendChild(metaEl);
+    row.appendChild(textEl);
+    return row;
+  }
+
+  // Each report's picture, when it has one, is loaded with the signed-in admin's login (the bucket is private).
+  function pictureNames(env, token) {
+    function list(prefix) {
+      return fetch(env.url + '/storage/v1/object/list/report-shots', {
+        method: 'POST',
+        headers: { apikey: env.key, Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prefix: prefix, limit: 1000, offset: 0 }),
+        cache: 'no-store',
+        credentials: 'omit',
+        referrerPolicy: 'no-referrer'
+      }).then(function (response) {
+        if (!response.ok) {
+          throw new Error('list failed');
+        }
+        return response.json();
       });
+    }
+    return list('').then(function (top) {
+      var folders = (top || []).filter(function (item) {
+        return item && item.id === null;
+      });
+      return Promise.all(folders.map(function (folder) {
+        return list(folder.name).then(function (files) {
+          return (files || []).map(function (file) {
+            return folder.name + '/' + file.name;
+          });
+        });
+      }));
+    }).then(function (groups) {
+      return [].concat.apply([], groups);
+    });
+  }
+
+  function attachPicture(env, token, row, objectName) {
+    return fetch(env.url + '/storage/v1/object/authenticated/report-shots/' + objectName, {
+      headers: { apikey: env.key, Authorization: 'Bearer ' + token },
+      cache: 'no-store',
+      credentials: 'omit',
+      referrerPolicy: 'no-referrer'
+    }).then(function (response) {
+      if (!response.ok) {
+        throw new Error('picture failed');
+      }
+      return response.blob();
+    }).then(function (blob) {
+      var img = document.createElement('img');
+      img.alt = 'Screenshot';
+      img.src = URL.createObjectURL(blob);
+      img.style.maxWidth = '100%';
+      img.style.borderRadius = '8px';
+      img.style.marginTop = '8px';
+      row.appendChild(img);
+    });
+  }
+
+  function renderFeedback(id, token, data) {
+    var bugs = byId('bugs-list');
+    var ideas = byId('ideas-list');
+    bugs.textContent = '';
+    ideas.textContent = '';
+    var bugRows = [];
+    var ideaRows = [];
+    (data.tester_reports || []).forEach(function (r) {
+      var row = feedbackRow(
+        [r.report_type, r.status, 'build ' + r.build_number, r.platform, r.screen, new Date(r.created_at).toLocaleDateString('en-GB')].filter(Boolean).join(' · '),
+        r.message
+      );
+      row.dataset.report = r.id;
+      row.dataset.picture = r.has_screenshot ? 'yes' : '';
+      (r.report_type === 'bug' ? bugRows : ideaRows).push(row);
     });
     (data.feedback || []).forEach(function (f) {
-      items.push({
-        meta: ['Settings', f.category, f.app_version, f.platform, new Date(f.created_at).toLocaleDateString('en-GB')].filter(Boolean).join(' · '),
-        text: f.message
-      });
+      var row = feedbackRow(
+        ['Settings', f.category, f.app_version, f.platform, new Date(f.created_at).toLocaleDateString('en-GB')].filter(Boolean).join(' · '),
+        f.message
+      );
+      (f.category === 'bug' ? bugRows : ideaRows).push(row);
     });
-    setText('feedback-message', items.length === 0 ? 'Nothing sent yet.' : items.length + ' messages, newest first in each part.');
-    items.forEach(function (item) {
-      var row = document.createElement('div');
-      row.className = 'fb-item';
-      var meta = document.createElement('div');
-      meta.className = 'fb-meta';
-      meta.textContent = item.meta;
-      var text = document.createElement('div');
-      text.className = 'fb-text';
-      text.textContent = String(item.text || '');
-      row.appendChild(meta);
-      row.appendChild(text);
-      list.appendChild(row);
+    setText('bugs-message', bugRows.length === 0 ? 'No bugs yet.' : bugRows.length + ' bugs, newest first.');
+    setText('ideas-message', ideaRows.length === 0 ? 'No requests or ideas yet.' : ideaRows.length + ' requests and ideas, newest first.');
+    bugRows.forEach(function (row) {
+      bugs.appendChild(row);
+    });
+    ideaRows.forEach(function (row) {
+      ideas.appendChild(row);
+    });
+    var withPictures = (data.tester_reports || []).filter(function (r) {
+      return r.has_screenshot;
+    });
+    if (withPictures.length === 0) {
+      return;
+    }
+    pictureNames(environments[id], token).then(function (names) {
+      withPictures.forEach(function (r) {
+        var name = names.find(function (n) {
+          return n.slice(-(r.id.length + 4)) === r.id + '.jpg';
+        });
+        var row = document.querySelector('[data-report="' + r.id + '"]');
+        if (name && row && id === current) {
+          attachPicture(environments[id], token, row, name).catch(function () {
+            // A picture that cannot be loaded is left out; the text stays.
+          });
+        }
+      });
+    }).catch(function () {
+      // Without the list, the messages are still shown.
     });
   }
 
@@ -414,12 +510,13 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     return request(environments[id], '/rest/v1/rpc/admin_feedback', {}, token).then(
       function (data) {
         if (id === current) {
-          renderFeedback(data);
+          renderFeedback(id, token, data);
         }
       },
       function () {
         if (id === current) {
-          setText('feedback-message', 'Could not load the bugs and ideas. Try Refresh again.');
+          setText('bugs-message', 'Could not load the bugs. Try Refresh again.');
+          setText('ideas-message', 'Could not load the requests and ideas. Try Refresh again.');
         }
       }
     );
