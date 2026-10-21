@@ -32,6 +32,9 @@ dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .fb-item:first-child { border-top: 0; }
 .fb-meta { font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; }
 .fb-text { white-space: pre-wrap; overflow-wrap: anywhere; }
+.feedback-tools { margin: 16px 0 0; }
+.fb-toggle { float: right; margin: 0 0 6px 12px; padding: 4px 10px; font-size: 0.85em; }
+.fb-picture { margin-top: 8px; padding: 4px 10px; font-size: 0.85em; }
 </style>
 <style>
 :root { color-scheme: light dark; --bg: #F5F2EE; --card: #FFFFFF; --text: #1F1F1F; --muted: #626B68; --line: #DADADA; --accent: #0E3A32; --label: #626B68; --eyebrow: #C9C4BC; --hero-bg: #0E3A32; --hero-text: #F5F2EE; --hero-edge: transparent; --burgundy: #5B1F2A; }
@@ -129,6 +132,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     <p class="muted">The cost is an estimate from token counts. The real bill is in Google Cloud billing.</p>
   </div>
 
+  <p class="feedback-tools"><button type="button" id="show-hidden" class="secondary">Show hidden</button></p>
   <p class="label">Bugs</p>
   <div class="card">
     <p id="bugs-message" class="muted"></p>
@@ -383,9 +387,51 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
   }
 
   // The bugs, requests and ideas (read only). Each message is shown as plain text, never as HTML. No sender is shown.
-  function feedbackRow(meta, text) {
+  // Hidden messages are remembered in this browser only (nothing is changed in the database). Keys: r:<report id>, f:<time sent>.
+  var HIDDEN_KEY = 'erana-dashboard-hidden';
+  var lastFeedback = null;
+  var showingHidden = false;
+
+  function hiddenKeys() {
+    try {
+      var saved = JSON.parse(window.localStorage.getItem(HIDDEN_KEY) || '[]');
+      return Array.isArray(saved) ? saved : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function setHidden(key, hide) {
+    var keys = hiddenKeys().filter(function (k) {
+      return k !== key;
+    });
+    if (hide) {
+      keys.push(key);
+    }
+    try {
+      window.localStorage.setItem(HIDDEN_KEY, JSON.stringify(keys));
+    } catch (error) {
+      // Without storage the hiding lasts until the page is reloaded.
+    }
+    if (lastFeedback) {
+      renderFeedback(lastFeedback.id, lastFeedback.token, lastFeedback.data);
+    }
+  }
+
+  function feedbackRow(meta, text, key) {
+    var hidden = hiddenKeys().indexOf(key) !== -1;
     var row = document.createElement('div');
     row.className = 'fb-item';
+    var toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'secondary fb-toggle';
+    toggle.textContent = hidden ? 'Unhide' : 'Hide';
+    toggle.addEventListener('click', function () {
+      setHidden(key, !hidden);
+    });
+    row.dataset.key = key;
+    row.dataset.hidden = hidden ? 'yes' : '';
+    row.appendChild(toggle);
     var metaEl = document.createElement('div');
     metaEl.className = 'fb-meta';
     metaEl.textContent = meta;
@@ -430,7 +476,28 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     });
   }
 
-  function attachPicture(env, token, row, objectName) {
+  // The picture is loaded only when it is asked for, and it can be hidden again (it is not shown by default).
+  function togglePicture(button, env, token, row, objectName) {
+    if (row.pictureImage) {
+      var shown = row.pictureImage.style.display !== 'none';
+      row.pictureImage.style.display = shown ? 'none' : '';
+      button.textContent = shown ? 'Show picture' : 'Hide picture';
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'Loading…';
+    loadPicture(env, token, objectName).then(function (img) {
+      row.pictureImage = img;
+      row.appendChild(img);
+      button.textContent = 'Hide picture';
+    }).catch(function () {
+      button.textContent = 'Picture could not be loaded';
+    }).then(function () {
+      button.disabled = false;
+    });
+  }
+
+  function loadPicture(env, token, objectName) {
     return fetch(env.url + '/storage/v1/object/authenticated/report-shots/' + objectName, {
       headers: { apikey: env.key, Authorization: 'Bearer ' + token },
       cache: 'no-store',
@@ -448,11 +515,12 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
       img.style.maxWidth = '100%';
       img.style.borderRadius = '8px';
       img.style.marginTop = '8px';
-      row.appendChild(img);
+      return img;
     });
   }
 
   function renderFeedback(id, token, data) {
+    lastFeedback = { id: id, token: token, data: data };
     var bugs = byId('bugs-list');
     var ideas = byId('ideas-list');
     bugs.textContent = '';
@@ -462,7 +530,8 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     (data.tester_reports || []).forEach(function (r) {
       var row = feedbackRow(
         [r.report_type, r.status, 'build ' + r.build_number, r.platform, r.screen, new Date(r.created_at).toLocaleDateString('en-GB')].filter(Boolean).join(' · '),
-        r.message
+        r.message,
+        'r:' + r.id
       );
       row.dataset.report = r.id;
       row.dataset.picture = r.has_screenshot ? 'yes' : '';
@@ -471,16 +540,27 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     (data.feedback || []).forEach(function (f) {
       var row = feedbackRow(
         ['Settings', f.category, f.app_version, f.platform, new Date(f.created_at).toLocaleDateString('en-GB')].filter(Boolean).join(' · '),
-        f.message
+        f.message,
+        'f:' + f.created_at
       );
       (f.category === 'bug' ? bugRows : ideaRows).push(row);
     });
-    setText('bugs-message', bugRows.length === 0 ? 'No bugs yet.' : bugRows.length + ' bugs, newest first.');
-    setText('ideas-message', ideaRows.length === 0 ? 'No requests or ideas yet.' : ideaRows.length + ' requests and ideas, newest first.');
-    bugRows.forEach(function (row) {
+    var hiddenCount = bugRows.concat(ideaRows).filter(function (row) {
+      return row.dataset.hidden === 'yes';
+    }).length;
+    var visibleBugs = bugRows.filter(function (row) {
+      return showingHidden || row.dataset.hidden !== 'yes';
+    });
+    var visibleIdeas = ideaRows.filter(function (row) {
+      return showingHidden || row.dataset.hidden !== 'yes';
+    });
+    byId('show-hidden').textContent = (showingHidden ? 'Hide hidden' : 'Show hidden') + (hiddenCount > 0 ? ' (' + hiddenCount + ')' : '');
+    setText('bugs-message', visibleBugs.length === 0 ? 'No bugs to show.' : visibleBugs.length + ' bugs, newest first.');
+    setText('ideas-message', visibleIdeas.length === 0 ? 'No requests or ideas to show.' : visibleIdeas.length + ' requests and ideas, newest first.');
+    visibleBugs.forEach(function (row) {
       bugs.appendChild(row);
     });
-    ideaRows.forEach(function (row) {
+    visibleIdeas.forEach(function (row) {
       ideas.appendChild(row);
     });
     var withPictures = (data.tester_reports || []).filter(function (r) {
@@ -496,9 +576,14 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
         });
         var row = document.querySelector('[data-report="' + r.id + '"]');
         if (name && row && id === current) {
-          attachPicture(environments[id], token, row, name).catch(function () {
-            // A picture that cannot be loaded is left out; the text stays.
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'secondary fb-picture';
+          button.textContent = 'Show picture';
+          button.addEventListener('click', function () {
+            togglePicture(button, environments[id], token, row, name);
           });
+          row.appendChild(button);
         }
       });
     }).catch(function () {
@@ -624,6 +709,13 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
           setText('sign-in-message', 'The code is wrong or has expired. Send a new code.');
         }
       });
+  });
+
+  byId('show-hidden').addEventListener('click', function () {
+    showingHidden = !showingHidden;
+    if (lastFeedback) {
+      renderFeedback(lastFeedback.id, lastFeedback.token, lastFeedback.data);
+    }
   });
 
   byId('refresh').addEventListener('click', function () {
