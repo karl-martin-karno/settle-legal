@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="et">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Erana testijuhend</title>
+<style>
+/* Layout: one calm reading column; a warning panel first, then install steps, a test list, and how to report. */
+:root {
+  --bg: #f6f8f8;
+  --surface: #ffffff;
+  --fg: #16292b;
+  --muted: #566b6e;
+  --line: #d9e2e3;
+  --accent: #0f6b66;
+  --accent-fg: #ffffff;
+  --note-bg: #fff4da;
+  --note-line: #e8c777;
+  --note-fg: #4a3608;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1819;
+    --surface: #152325;
+    --fg: #e7efef;
+    --muted: #9db2b4;
+    --line: #28393b;
+    --accent: #4fc3bb;
+    --accent-fg: #07211f;
+    --note-bg: #2b2310;
+    --note-line: #6b5518;
+    --note-fg: #f2dfa8;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1819;
+  --surface: #152325;
+  --fg: #e7efef;
+  --muted: #9db2b4;
+  --line: #28393b;
+  --accent: #4fc3bb;
+  --accent-fg: #07211f;
+  --note-bg: #2b2310;
+  --note-line: #6b5518;
+  --note-fg: #f2dfa8;
+  color-scheme: dark;
+}
+html { color-scheme: light dark; }
+body { margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px; }
+h1 { font-size: 2.2rem; line-height: 1.15; margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h2 { font-size: 1.3rem; line-height: 1.25; margin: 0 0 12px; text-wrap: balance; }
+p { margin: 0 0 12px; }
+p:last-child { margin-bottom: 0; }
+.eyebrow { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.lead { color: var(--muted); font-size: 1.1rem; margin-top: 12px; }
+.note { background: var(--note-bg); color: var(--note-fg); border: 1px solid var(--note-line); border-radius: 14px; padding: 18px 20px; }
+.note h2 { margin-bottom: 8px; }
+.note ul { margin: 8px 0 0; padding-left: 20px; }
+.note li { margin-bottom: 4px; }
+ol.steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; counter-reset: step; }
+ol.steps li { counter-increment: step; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+ol.steps li::before { content: counter(step); width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); display: grid; place-items: center; font-weight: 700; font-size: 0.95rem; }
+.checks { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
+.checks li::before { content: ""; width: 18px; height: 18px; margin-top: 4px; border: 2px solid var(--accent); border-radius: 5px; }
+.report { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+.bang { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); font-weight: 800; vertical-align: middle; }
+.tips { margin: 12px 0 0; padding-left: 20px; color: var(--muted); }
+details { border-top: 1px solid var(--line); padding: 12px 0; }
+details:last-of-type { border-bottom: 1px solid var(--line); }
+summary { cursor: pointer; font-weight: 600; }
+summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+details p { margin-top: 8px; color: var(--muted); }
+.mail { font-weight: 600; overflow-wrap: anywhere; }
+.langlink a { color: var(--accent); font-weight: 600; }
+footer { color: var(--muted); font-size: 0.9rem; }
+@media (max-width: 480px) { h1 { font-size: 1.8rem; } body { font-size: 16px; } }
+</style>
+
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Varajane testversioon</div>
+    <h1>Tere tulemast Erana testima</h1>
+    <p class="lead">Erana aitab sõpradel, peredel ja kaaslastel kulusid jagada. Sina lisad, mis sai makstud, ja rakendus peab arvet, kes kellele võlgneb. Aitäh, et proovid seda nii vara.</p>
+    <p class="langlink"><a href="/test" hreflang="en" lang="en">English</a></p>
+  </header>
+
+  <section class="note">
+    <h2>Palun loe enne läbi</h2>
+    <p>Erana tehti kiiresti tehisintellekti abiga, nii et oota ebatasasusi.</p>
+    <ul>
+      <li>Esineb vigu. Mõni asi läheb katki, näitab imelikku teksti või teeb valesti.</li>
+      <li>Paljud plaanitud funktsioonid puuduvad veel.</li>
+      <li>Välimus on ajutine. Värvid, ikoonid ja paigutus muutuvad.</li>
+      <li>Palun ära toetu sellele veel päris raha puhul. Käsitle numbreid testandmetena.</li>
+    </ul>
+    <p style="margin-top:12px">Just selleks see test ongi. Varane tagasiside on praegu väärtuslikum kui lihvitud rakendus hiljem, nii et ütle mulle kõik: vead, segased vaated, ideed, asjad, mida lootsid leida.</p>
+  </section>
+
+  <section>
+    <h2>Hangi rakendus</h2>
+    <ol class="steps">
+      <li><div>Installi App Store'ist <strong>TestFlight</strong>. See on Apple'i tasuta rakendus rakenduste testimiseks enne väljaandmist. Vaja on iPhone'i.</div></li>
+      <li><div>Ava Apple'i kutse (e-kiri või link, mille ma sulle saadan) oma iPhone'is ja puuduta <strong>View in TestFlight</strong>.</div></li>
+      <li><div>Puuduta <strong>Accept</strong> ja siis <strong>Install</strong>. Erana ilmub su avaekraanile.</div></li>
+      <li><div>Ava Erana ja logi sisse. Uuendused tulevad TestFlighti kaudu. Lülita seal sisse automaatsed uuendused, et sul oleks alati uusim versioon.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Mida proovida</h2>
+    <p>Kõike pole vaja teha. Vali, mis tundub huvitav, ja proovi teha asju nii, nagu teeksid päriselus.</p>
+    <ul class="checks">
+      <li><span>Logi sisse ja logi uuesti välja. Kui logid sisse e-posti koodiga, tuleb kiri aadressilt noreply@erana.eu ja kood on 6-kohaline.</span></li>
+      <li><span>Loo grupp ja kutsu sõber kutselingiga. Kui testite kahekesi koos, on see palju kasulikum.</span></li>
+      <li><span>Lisa kulusid: jaga võrdselt, täpsete summade, protsentide või ridade kaupa.</span></li>
+      <li><span>Skanni tšekk ja vaata, kas read tulevad õigesti välja. Lisa kulule tšeki foto.</span></li>
+      <li><span>Puuduta grupis vormil Lisa kulu nuppu Kirjuta (või mikrofoni) ja kirjuta või ütle midagi sellist nagu „Õhtusöök 540 SEK Anna ja Tomiga, mina maksin“. Esimesel korral nõustud lühikese teatega tehisintellekti assistendi kohta. Kontrolli kõike, mida ta täidab: midagi ei salvestata enne, kui puudutad Salvesta.</span></li>
+      <li><span>Ava Assistent ja küsi oma kulude või gruppide kohta, näiteks „Kui palju kulutasin sel kuul toidule?“. Ta võib eksida, nii et kontrolli vastust.</span></li>
+      <li><span>Lisa kulu teises valuutas (EUR, SEK või USD). Iga valuuta jääb oma saldoga eraldi.</span></li>
+      <li><span>Arvelda ja märgi makse.</span></li>
+      <li><span>Rootsi kasutajad: lisa profiilile oma Rootsi mobiilinumber (see on ka su Swishi number) ja kasuta SEK-is gruppi. Sulle võlgnev inimene saab rakendusest avada Swishi, summa on juba täidetud, maksta seal ja tulla tagasi makset märkima. Swish peab olema telefonis installitud. Rakendus ei tee makset ise.</span></li>
+      <li><span>Lülita sisse lennurežiim, lisa kulu ja mine siis uuesti võrku.</span></li>
+      <li><span>Loo jaotises Minu raha eesmärk ja meeldetuletus.</span></li>
+      <li><span>Proovi rakendust teises keeles ja tumedas režiimis.</span></li>
+      <li><span>Uusimas versioonis: lisa jaotises Minu raha oma kulu ja puuduta seda, et seda muuta või kustutada. Varasemad versioonid säilivad ja neid näed ainult sina.</span></li>
+      <li><span>Uusimas versioonis: otsi ja filtreeri oma kulusid teksti, kategooria, kuupäeva või summa järgi. Summavahemik võrdleb korraga ühte valuutat.</span></li>
+      <li><span>Uusimas versioonis: kirjuta kulu vormil kirjeldus ja puuduta Paku kategooria (assistent peab olema sisse lülitatud).</span></li>
+      <li><span>Uusimas versioonis: samad Kirjuta, mikrofon ja Skanni tšekk on ka oma kulu vormil (jaotises Minu raha) ning lühikesel kaardil on nupp Vali foto tšeki jaoks sinu fotoraamatust.</span></li>
+      <li><span>Uusimas versioonis: ava täielik aruanne. Sinu enda kulud ja sinu osa grupikuludest on näidatud eraldi. Kui kulusid on mitmes valuutas, on igal valuutal oma plokk koos koodiga.</span></li>
+      <li><span>Proovi see katki teha: tühjad väljad, tohutud summad, kummalised märgid.</span></li>
+    </ul>
+  </section>
+
+  <section class="report">
+    <h2>Saada tagasisidet nupuga <span class="bang">!</span></h2>
+    <p>See on kõige olulisem osa. Testversioonis on peamiste vaadete (Avaleht, Minu raha, Jagatud ja Assistent) paremas ülanurgas ümmarguse profiilimulli kõrval ümmargune <strong>!</strong> nupp. Puuduta seda, et saata aruanne. Kõik käib selle kaudu, nii et eraldi mulle kirjutada pole vaja.</p>
+    <p>Kasuta seda vigade, segaste vaadete, ideede ja puuduvate funktsioonide jaoks. Ära oota, kuni sul on midagi suurt.</p>
+    <ul class="tips">
+      <li>Ütle, mida sa tegid, mida ootasid ja mis selle asemel juhtus.</li>
+      <li>Lisa vajadusel ekraanipilt oma fotodest. See aitab palju.</li>
+      <li>Üks aruanne ühe probleemi kohta on lihtsam jälgida kui üks pikk nimekiri.</li>
+      <li>Ka väikesed asjad loevad: sõna, millest sa aru ei saa, nupp, mida on raske tabada.</li>
+    </ul>
+    <p style="margin-top:12px">Aruanne on seotud sinu kontoga, et saaksin sult küsida, kui miski on ebaselge. Seda loen ainult mina.</p>
+  </section>
+
+  <section>
+    <h2>Küsimused</h2>
+    <details>
+      <summary>Ma ei saanud kutset.</summary>
+      <p>Vaata rämpsposti kausta ja ütle mulle siis Apple ID e-posti aadress, mida soovid kasutada. TestFlighti kutsed töötavad ainult aadressil, mille ma lisasin.</p>
+    </details>
+    <details>
+      <summary>Ma ei saanud sisselogimise koodi.</summary>
+      <p>Vaata rämpsposti kausta. Kiri tuleb aadressilt noreply@erana.eu ja jõuab kohale minuti või kahe jooksul. Uut koodi saad küsida kord minutis. Kui see ikka ei tule, ütle mulle, millist e-posti aadressi kasutasid.</p>
+    </details>
+    <details>
+      <summary>Rakendus ütleb, et see on aegunud.</summary>
+      <p>TestFlighti versioonid kehtivad 90 päeva. Ava TestFlight ja vaata, kas on uuendus. Kui pole, ütle mulle.</p>
+    </details>
+    <details>
+      <summary>Kas minu andmed on turvalised?</summary>
+      <p>Sinu andmeid hoitakse rakenduse enda andmebaasis ja kasutatakse ainult selleks, et rakendus töötaks. Privaatsuspoliitika on aadressil erana.eu/privacy. Kui kasutad tehisintellekti assistenti, saadetakse sinu kirjutatud lause, tšeki foto või küsimus ELis asuvale tehisintellekti mudelile selle ühe päringu vastamiseks ja Erana ei säilita seda. Sellegipoolest on see test: palun ära sisesta midagi, mida sa ei tahaks, et testkasutaja näeks.</p>
+    </details>
+    <details>
+      <summary>Kas mu testandmed jäävad alles?</summary>
+      <p>Tõenäoliselt jah, aga need võidakse kustutada, kui midagi suurt muutub. Palun ära käsitle midagi rakenduses veel püsivana.</p>
+    </details>
+    <details>
+      <summary>Kas ma saan oma konto kustutada?</summary>
+      <p>Jah. Vaata Seadetest. Konto kustutamine eemaldab sinu andmed.</p>
+    </details>
+    <details>
+      <summary>Midagi on valesti ja nupp ! ei tööta.</summary>
+      <p>Kirjuta aadressile <span class="mail">support@erana.eu</span>, mis juhtus.</p>
+    </details>
+  </section>
+
+  <footer>
+    <p>Aitäh abi eest. Iga aruanne, suur või väike, teeb Erana paremaks.</p>
+    <p>Erana testversioon. Tugi: <span class="mail">support@erana.eu</span></p>
+  </footer>
+</main>
+</body>
+</html>
