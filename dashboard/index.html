@@ -28,6 +28,10 @@ dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
 .tab { flex: 1; background: transparent; color: var(--muted); border: 1px solid var(--line); }
 .tab[aria-selected="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 .tab:disabled { opacity: 0.4; cursor: default; }
+.fb-item { padding: 10px 0; border-top: 1px solid rgba(127, 127, 127, 0.25); }
+.fb-item:first-child { border-top: 0; }
+.fb-meta { font-size: 0.85em; opacity: 0.7; margin-bottom: 4px; }
+.fb-text { white-space: pre-wrap; overflow-wrap: anywhere; }
 </style>
 <style>
 :root { color-scheme: light dark; --bg: #F5F2EE; --card: #FFFFFF; --text: #1F1F1F; --muted: #626B68; --line: #DADADA; --accent: #0E3A32; --label: #626B68; --eyebrow: #C9C4BC; --hero-bg: #0E3A32; --hero-text: #F5F2EE; --hero-edge: transparent; --burgundy: #5B1F2A; }
@@ -123,6 +127,12 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
       <dt>Estimated cost</dt><dd id="ai-cost">–</dd>
     </dl>
     <p class="muted">The cost is an estimate from token counts. The real bill is in Google Cloud billing.</p>
+  </div>
+
+  <p class="label">Bugs and ideas</p>
+  <div class="card">
+    <p id="feedback-message" class="muted"></p>
+    <div id="feedback-list"></div>
   </div>
 
   <p class="label">Last 30 days</p>
@@ -366,6 +376,55 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     });
   }
 
+  // The bugs, requests and ideas (read only). Each message is shown as plain text, never as HTML. No sender is shown.
+  function renderFeedback(data) {
+    var list = byId('feedback-list');
+    list.textContent = '';
+    var items = [];
+    (data.tester_reports || []).forEach(function (r) {
+      items.push({
+        meta: [r.report_type, r.status, 'build ' + r.build_number, r.platform, r.screen, new Date(r.created_at).toLocaleDateString('en-GB')]
+          .filter(Boolean).join(' · '),
+        text: r.message
+      });
+    });
+    (data.feedback || []).forEach(function (f) {
+      items.push({
+        meta: ['Settings', f.category, f.app_version, f.platform, new Date(f.created_at).toLocaleDateString('en-GB')].filter(Boolean).join(' · '),
+        text: f.message
+      });
+    });
+    setText('feedback-message', items.length === 0 ? 'Nothing sent yet.' : items.length + ' messages, newest first in each part.');
+    items.forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'fb-item';
+      var meta = document.createElement('div');
+      meta.className = 'fb-meta';
+      meta.textContent = item.meta;
+      var text = document.createElement('div');
+      text.className = 'fb-text';
+      text.textContent = String(item.text || '');
+      row.appendChild(meta);
+      row.appendChild(text);
+      list.appendChild(row);
+    });
+  }
+
+  function loadFeedback(id, token) {
+    return request(environments[id], '/rest/v1/rpc/admin_feedback', {}, token).then(
+      function (data) {
+        if (id === current) {
+          renderFeedback(data);
+        }
+      },
+      function () {
+        if (id === current) {
+          setText('feedback-message', 'Could not load the bugs and ideas. Try Refresh again.');
+        }
+      }
+    );
+  }
+
   function enableRefresh() {
     byId('refresh').disabled = false;
   }
@@ -387,6 +446,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
             if (id === current) {
               render(id, data);
               showDashboard();
+              loadFeedback(id, session.access_token);
             }
           },
           function (error) {
