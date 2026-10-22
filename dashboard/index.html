@@ -116,6 +116,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
       <dt>Groups</dt><dd id="groups">–</dd>
       <dt>Group members</dt><dd id="members">–</dd>
       <dt>Group expenses</dt><dd id="group-expenses">–</dd>
+      <dt>Friend expenses</dt><dd id="friend-expenses">–</dd>
       <dt>Own expenses</dt><dd id="personal-expenses">–</dd>
       <dt>Database size</dt><dd id="db-size">–</dd>
     </dl>
@@ -184,8 +185,12 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     byId(id).textContent = text;
   }
 
+  // A count the database does not send yet (for example on Live before its migration) shows a dash, not NaN.
   function count(value) {
-    return Number(value).toLocaleString('en-GB');
+    if (typeof value !== 'number') {
+      return '–';
+    }
+    return value.toLocaleString('en-GB');
   }
 
   // Costs are stored in millionths of a US dollar.
@@ -373,6 +378,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     setText('groups', count(app.groups));
     setText('members', count(app.group_members));
     setText('group-expenses', count(app.group_expenses));
+    setText('friend-expenses', count(app.friend_expenses));
     setText('personal-expenses', count(app.personal_expenses));
     setText('db-size', (Number(app.database_bytes) / 1048576).toFixed(1) + ' MB');
     setText('ai-people', count(month.people));
