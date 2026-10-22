@@ -359,7 +359,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
 
   function dayRow(day) {
     var row = document.createElement('tr');
-    [day.day, count(day.requests), usd(day.cost_micro, 4)].forEach(function (text) {
+    [day.day, count(day.requests), usd(day.cost_micro, 5)].forEach(function (text) {
       var cell = document.createElement('td');
       cell.textContent = String(text);
       row.appendChild(cell);
@@ -384,7 +384,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     setText('ai-people', count(month.people));
     setText('ai-requests', count(month.requests));
     setText('ai-tokens', count(month.input_tokens) + ' in, ' + count(month.output_tokens) + ' out');
-    setText('ai-cost', usd(month.cost_micro, 2));
+    setText('ai-cost', usd(month.cost_micro, 5));
     var rows = byId('ai-days');
     rows.textContent = '';
     data.ai.by_day.forEach(function (day) {
