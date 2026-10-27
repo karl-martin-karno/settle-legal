@@ -129,8 +129,13 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
       <dt>Requests</dt><dd id="ai-requests">–</dd>
       <dt>Tokens</dt><dd id="ai-tokens">–</dd>
       <dt>Estimated cost</dt><dd id="ai-cost">–</dd>
+      <dt>Credits used</dt><dd id="ai-credits">–</dd>
+      <dt>People on trial</dt><dd id="ai-trial">–</dd>
+      <dt>People on Premium</dt><dd id="ai-premium">–</dd>
+      <dt>People on no plan</dt><dd id="ai-none">–</dd>
+      <dt>Near a credit limit</dt><dd id="ai-near">–</dd>
     </dl>
-    <p class="muted">The cost is an estimate from token counts. The real bill is in Google Cloud billing.</p>
+    <p class="muted">The cost is an estimate from token counts. The real bill is in Google Cloud billing. Credits count a receipt scan as 2 and any other request as 1, and a failed call as 0. Plans are verified trial and Premium periods. "Near a credit limit" is people at 80% or more of their daily or monthly credits.</p>
   </div>
 
   <p class="feedback-tools"><button type="button" id="show-hidden" class="secondary">Show hidden</button></p>
@@ -149,7 +154,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
   <p class="label">Last 30 days</p>
   <div class="card table">
     <table>
-      <thead><tr><th>Day</th><th>Requests</th><th>Estimated cost</th></tr></thead>
+      <thead><tr><th>Day</th><th>Requests</th><th>Credits</th><th>Estimated cost</th></tr></thead>
       <tbody id="ai-days"></tbody>
     </table>
   </div>
@@ -359,7 +364,7 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
 
   function dayRow(day) {
     var row = document.createElement('tr');
-    [day.day, count(day.requests), usd(day.cost_micro, 5)].forEach(function (text) {
+    [day.day, count(day.requests), count(day.credits), usd(day.cost_micro, 5)].forEach(function (text) {
       var cell = document.createElement('td');
       cell.textContent = String(text);
       row.appendChild(cell);
@@ -385,6 +390,14 @@ nav.langs a[aria-current="page"] { background: var(--accent); border-color: var(
     setText('ai-requests', count(month.requests));
     setText('ai-tokens', count(month.input_tokens) + ' in, ' + count(month.output_tokens) + ' out');
     setText('ai-cost', usd(month.cost_micro, 5));
+    // Credits and plans come from the database function of 27 October 2026; Live shows dashes until it has that migration.
+    var plans = data.ai.plans || {};
+    var near = data.ai.near_limit || {};
+    setText('ai-credits', count(data.ai.credits_this_month));
+    setText('ai-trial', count(plans.trial));
+    setText('ai-premium', count(plans.premium));
+    setText('ai-none', count(plans.none));
+    setText('ai-near', count(near.people));
     var rows = byId('ai-days');
     rows.textContent = '';
     data.ai.by_day.forEach(function (day) {
